@@ -1,1 +1,1165 @@
+<!DOCTYPE html>
 
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>UIDetect</title>
+
+    <link
+        rel="stylesheet"
+        href="popup.css">
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- =====================================================
+         Header
+    ===================================================== -->
+
+    <div class="header">
+
+        <img
+            src="../icons/icon128.png"
+            alt="UIDetect Logo"
+            class="logo">
+
+
+        <h1>
+            UIDetect
+        </h1>
+
+
+        <p class="subtitle">
+            Intelligent Website Security Assessment
+        </p>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         Current Website
+    ===================================================== -->
+
+    <div class="card website-card">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-label">
+                    CURRENT WEBSITE
+                </span>
+
+                <h2>
+                    Website Security
+                </h2>
+                
+            </div>
+            <span
+                id="website-status-badge"
+                class="status-badge status-neutral">
+
+                Waiting for Scan
+
+            </span>
+
+        </div>
+
+
+
+        <p
+            id="website-name"
+            class="website-name">
+
+            Loading...
+
+        </p>
+
+
+        <small
+            id="website-url"
+            class="website-url">
+
+            Waiting...
+
+        </small>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         Security Posture
+    ===================================================== -->
+
+    <div class="card score-card">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-label">
+                    SECURITY POSTURE
+                </span>
+
+                <h2>
+                    Security Score
+                </h2>
+
+            </div>
+
+
+            <span
+                id="security-level-badge"
+                class="status-badge status-neutral">
+
+                Waiting for Scan
+
+            </span>
+
+        </div>
+
+
+        <div class="score-container">
+
+            <div
+                id="security-score"
+                class="security-score">
+
+                --
+
+            </div>
+
+
+            <div class="score-label">
+                / 100
+            </div>
+
+        </div>
+
+
+        <div class="score-progress">
+
+            <div
+                id="security-score-bar"
+                class="score-progress-bar">
+
+            </div>
+
+        </div>
+
+
+        <p class="score-description">
+
+            UIDetect security assessment.
+
+        </p>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         AI Recommendation
+    ===================================================== -->
+
+    <div class="card ai-card">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-label">
+                    AI RECOMMENDATION
+                </span>
+
+                <h2>
+                    Security Guidance
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <p id="ai-recommendation">
+
+            Waiting for AI recommendation...
+
+        </p>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         Scan Button
+    ===================================================== -->
+
+    <button
+        id="scanButton"
+        class="scan-button">
+
+        <span id="scan-button-text">
+            Scan Website
+        </span>
+
+    </button>
+
+
+
+    <!-- =====================================================
+         Scan Progress
+    ===================================================== -->
+
+    <div
+        id="loading-spinner"
+        class="scan-progress">
+
+        <div class="loader"></div>
+
+
+        <div class="scan-progress-content">
+
+            <strong>
+                Scanning website...
+            </strong>
+
+
+            <span id="scan-progress-text">
+                Running security checks
+            </span>
+
+
+            <button
+                id="cancelScanButton"
+                class="cancel-scan-button">
+
+                Cancel Scan
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         Error Message
+    ===================================================== -->
+
+    <div
+        id="scan-error"
+        class="scan-error"
+        style="display:none;">
+
+        <strong>
+            Scan Failed
+        </strong>
+
+
+        <p id="scan-error-message">
+            Unable to scan this website.
+        </p>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         Security Details
+    ===================================================== -->
+
+    <div class="card security-details-card">
+
+        <details id="securityDetails">
+
+            <summary>
+                View Security Details
+            </summary>
+
+
+            <div class="security-details-content">
+
+
+                <!-- =========================================
+                     Core Protection
+                ========================================== -->
+
+                <div class="card">
+
+                    <div class="section-heading">
+
+                        <div>
+
+                            <span class="section-label">
+                                SECURITY CHECKS
+                            </span>
+
+                            <h2>
+                                Core Protection
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- HTTPS -->
+
+                    <div class="security-item">
+
+                        <div class="security-header">
+
+                            <span class="security-title">
+                                HTTPS
+                            </span>
+
+                            <span
+                                id="https-status"
+                                class="status">
+
+                                Waiting...
+
+                            </span>
+
+                        </div>
+
+
+                        <details>
+
+                            <summary>
+                                Learn More
+                            </summary>
+
+
+                            <div class="info-box">
+
+                                <strong>What is HTTPS?</strong>
+
+                                <br><br>
+
+                                HTTPS creates a secure connection
+                                between your browser and the website.
+
+                                <br><br>
+
+                                <strong>Why does it matter?</strong>
+
+                                <br><br>
+
+                                When HTTPS is enabled, information
+                                sent between you and the website
+                                is protected while it is being
+                                transferred.
+
+                                <br><br>
+
+                                <strong>Important:</strong>
+
+                                <br><br>
+
+                                HTTPS protects the connection,
+                                but it does not guarantee that
+                                the website itself is trustworthy
+                                or free from scams.
+
+                            </div>
+
+                        </details>
+
+                    </div>
+
+
+
+                    <!-- Safe Browsing -->
+
+                    <div class="security-item">
+
+                        <div class="security-header">
+
+                            <span class="security-title">
+                                Google Safe Browsing
+                            </span>
+
+                            <span
+                                id="safe-browsing-status"
+                                class="status">
+
+                                Waiting...
+
+                            </span>
+
+                        </div>
+
+
+                        <details>
+
+                            <summary>
+                                Learn More
+                            </summary>
+
+
+                            <div class="info-box">
+
+                                <strong>
+                                    What is Google Safe Browsing?
+                                </strong>
+
+                                <br><br>
+
+                                Google Safe Browsing checks websites
+                                for known dangers such as phishing,
+                                malware, and other harmful activities.
+
+                                <br><br>
+
+                                <strong>
+                                    What does "Safe" mean?
+                                </strong>
+
+                                <br><br>
+
+                                A Safe result means Google Safe
+                                Browsing did not find a known threat
+                                associated with the website at the
+                                time of the check.
+
+                                <br><br>
+
+                                <strong>Important:</strong>
+
+                                <br><br>
+
+                                A Safe result does not guarantee
+                                that the website is completely safe.
+                                UIDetect uses other security checks
+                                to provide a broader assessment.
+
+                            </div>
+
+                        </details>
+
+                    </div>
+
+
+
+                    <!-- SSL -->
+
+                    <div class="security-item">
+
+                        <div class="security-header">
+
+                            <span class="security-title">
+                                SSL Certificate
+                            </span>
+
+                            <span
+                                id="ssl-status"
+                                class="status">
+
+                                Waiting...
+
+                            </span>
+
+                        </div>
+
+
+                        <details>
+
+                            <summary>
+                                Learn More
+                            </summary>
+
+
+                            <div class="info-box">
+
+                                <strong>
+                                    What is an SSL Certificate?
+                                </strong>
+
+                                <br><br>
+
+                                An SSL certificate helps a browser
+                                verify that a website has a valid
+                                certificate and can use a secure
+                                connection.
+
+                                <br><br>
+
+                                <strong>Why does it matter?</strong>
+
+                                <br><br>
+
+                                A valid certificate helps protect
+                                your connection and shows that the
+                                website's certificate is currently
+                                valid.
+
+                                <br><br>
+
+                                <strong>Important:</strong>
+
+                                <br><br>
+
+                                A valid certificate does not guarantee
+                                that the website is safe or legitimate.
+                                Scammers can also use valid certificates.
+
+                            </div>
+
+                        </details>
+
+                    </div>
+
+
+
+                    <!-- TLS -->
+
+                    <div class="security-item">
+
+                        <div class="security-header">
+
+                            <span class="security-title">
+                                TLS Version
+                            </span>
+
+                            <span
+                                id="tlsVersion"
+                                class="status">
+
+                                Waiting...
+
+                            </span>
+
+                        </div>
+
+
+                        <details>
+
+                            <summary>
+                                Learn More
+                            </summary>
+
+
+                            <div class="info-box">
+
+                                <strong>
+                                    What is TLS?
+                                </strong>
+
+                                <br><br>
+
+                                TLS is the technology that protects
+                                information while it travels between
+                                your browser and a website.
+
+                                <br><br>
+
+                                <strong>Why does it matter?</strong>
+
+                                <br><br>
+
+                                Newer TLS versions provide stronger
+                                and more modern protection for your
+                                connection.
+
+                                <br><br>
+
+                                <strong>For example:</strong>
+
+                                <br><br>
+
+                                TLS 1.3 is a modern and secure version
+                                of TLS. If UIDetect shows TLS 1.3,
+                                the website is using a strong connection
+                                protection method.
+
+                            </div>
+
+                        </details>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     WEBSITE SECURITY SETTINGS
+                ========================================== -->
+
+                <div class="card">
+
+                    <div class="section-heading">
+
+                        <div>
+
+                            <span class="section-label">
+                                WEBSITE SECURITY SETTINGS
+                            </span>
+
+                            <h2>
+                                Security Headers
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- HSTS -->
+
+                    <div class="security-item">
+
+                        <div class="security-header">
+
+                            <span class="security-title">
+                                HSTS
+                            </span>
+
+                            <span
+                                id="hsts-status"
+                                class="status">
+
+                                Waiting...
+
+                            </span>
+
+                        </div>
+
+
+                        <details>
+
+                            <summary>
+                                Learn More
+                            </summary>
+
+
+                            <div class="info-box">
+
+                                HSTS tells your browser to always
+                                use a secure HTTPS connection when
+                                visiting this website. This helps
+                                prevent attackers from trying to
+                                force your connection to use an
+                                unsafe connection.
+
+                            </div>
+
+                        </details>
+
+                    </div>
+
+
+
+                    <!-- CSP -->
+
+                    <div class="security-item">
+
+                        <div class="security-header">
+
+                            <span class="security-title">
+                                Content Security Policy
+                            </span>
+
+                            <span
+                                id="csp-status"
+                                class="status">
+
+                                Waiting...
+
+                            </span>
+
+                        </div>
+
+
+                        <details>
+
+                            <summary>
+                                Learn More
+                            </summary>
+
+
+                            <div class="info-box">
+
+                                Content Security Policy helps control
+                                which scripts and other content are
+                                allowed to run on a website. This can
+                                reduce the risk of harmful scripts
+                                being used to attack visitors.
+
+                            </div>
+
+                        </details>
+
+                    </div>
+
+
+
+                    <!-- X Frame -->
+
+                    <div class="security-item">
+
+                        <div class="security-header">
+
+                            <span class="security-title">
+                                X-Frame-Options
+                            </span>
+
+                            <span
+                                id="xframe-status"
+                                class="status">
+
+                                Waiting...
+
+                            </span>
+
+                        </div>
+
+
+                        <details>
+
+                            <summary>
+                                Learn More
+                            </summary>
+
+
+                            <div class="info-box">
+
+                                X-Frame-Options helps prevent a website
+                                from being secretly displayed inside
+                                another website. This can help protect
+                                you from tricks that make you click
+                                something without realizing it.
+
+                            </div>
+
+                        </details>
+
+                    </div>
+
+
+
+                    <!-- X Content -->
+
+                    <div class="security-item">
+
+                        <div class="security-header">
+
+                            <span class="security-title">
+                                X-Content-Type-Options
+                            </span>
+
+                            <span
+                                id="xcontent-status"
+                                class="status">
+
+                                Waiting...
+
+                            </span>
+
+                        </div>
+
+
+                        <details>
+
+                            <summary>
+                                Learn More
+                            </summary>
+
+
+                            <div class="info-box">
+
+                                This setting tells your browser to use
+                                the file type provided by the website
+                                instead of trying to guess it. This
+                                helps prevent some types of unsafe
+                                content from being treated incorrectly.
+
+                            </div>
+
+                        </details>
+
+                    </div>
+
+
+
+                    <!-- Referrer -->
+
+                    <div class="security-item">
+
+                        <div class="security-header">
+
+                            <span class="security-title">
+                                Referrer Policy
+                            </span>
+
+                            <span
+                                id="referrer-status"
+                                class="status">
+
+                                Waiting...
+
+                            </span>
+
+                        </div>
+
+
+                        <details>
+
+                            <summary>
+                                Learn More
+                            </summary>
+
+
+                            <div class="info-box">
+
+                                Referrer Policy controls how much
+                                information about the page you came
+                                from is shared when you visit another
+                                website. This can help reduce
+                                unnecessary sharing of your browsing
+                                information.
+
+                            </div>
+
+                        </details>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     Domain Reputation
+                ========================================== -->
+
+                <div class="card">
+
+                    <div class="section-heading">
+
+                        <div>
+
+                            <span class="section-label">
+                                DOMAIN REPUTATION
+                            </span>
+
+                            <h2>
+                                Domain Information
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- WHOIS -->
+
+                    <div class="security-item">
+
+                        <div class="security-header">
+
+                            <span class="security-title">
+                                WHOIS Status
+                            </span>
+
+                            <span
+                                id="whois-status"
+                                class="status">
+
+                                Waiting...
+
+                            </span>
+
+                        </div>
+
+
+                        <details>
+
+                            <summary>
+                                Learn More
+                            </summary>
+
+
+                            <div class="info-box">
+
+                                WHOIS information shows the
+                                registration history of a website's
+                                domain. UIDetect uses this information
+                                to estimate whether the domain is new
+                                or has been established for many years.
+                                An established domain may have a longer
+                                history, but this does not guarantee
+                                that the website is safe.
+
+                            </div>
+
+                        </details>
+
+                    </div>
+
+
+
+                    <!-- Domain Age -->
+
+                    <div class="security-item">
+
+                        <div class="security-header">
+
+                            <span class="security-title">
+                                Domain Age
+                            </span>
+
+                            <span
+                                id="domain-age"
+                                class="status">
+
+                                Waiting...
+
+                            </span>
+
+                        </div>
+
+
+                        <details>
+
+                            <summary>
+                                Learn More
+                            </summary>
+
+
+                            <div class="info-box">
+
+                                Domain Age shows how long the
+                                website's domain has existed.
+                                A very new domain may deserve more
+                                caution because it has a short history.
+                                An older domain has a longer registration
+                                history, but age alone does not mean that
+                                a website is trustworthy.
+
+                            </div>
+
+                        </details>
+
+                    </div>
+
+
+
+                    <!-- Registrar -->
+
+                    <div class="security-item">
+
+                        <div class="security-header">
+
+                            <span class="security-title">
+                                Registrar
+                            </span>
+
+                            <span
+                                id="registrar"
+                                class="status">
+
+                                Waiting...
+
+                            </span>
+
+                        </div>
+
+
+                        <details>
+
+                            <summary>
+                                Learn More
+                            </summary>
+
+
+                            <div class="info-box">
+
+                                The registrar is the company that
+                                manages the registration of the
+                                website's domain name. It helps maintain
+                                the domain registration, but the registrar
+                                itself does not determine whether the
+                                website is safe.
+
+                            </div>
+
+                        </details>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     Multi-Engine Reputation
+                ========================================== -->
+
+                <div class="card">
+
+                    <div class="section-heading">
+
+                        <div>
+
+                            <h2>
+                                ViruaTotal Analysis
+                            </h2>
+
+                        </div>
+
+
+                        <span
+                            id="virustotal-status"
+                            class="status-badge status-neutral">
+
+                            Waiting...
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="reputation-grid">
+
+                        <div class="reputation-stat">
+
+                            <span
+                                class="reputation-value"
+                                id="virustotal-malicious">
+
+                                0
+
+                            </span>
+
+                            <span class="reputation-label">
+                                Malicious
+                            </span>
+
+                        </div>
+
+
+                        <div class="reputation-stat">
+
+                            <span
+                                class="reputation-value"
+                                id="virustotal-suspicious">
+
+                                0
+
+                            </span>
+
+                            <span class="reputation-label">
+                                Suspicious
+                            </span>
+
+                        </div>
+
+
+                        <div class="reputation-stat">
+
+                            <span
+                                class="reputation-value"
+                                id="virustotal-harmless">
+
+                                0
+
+                            </span>
+
+                            <span class="reputation-label">
+                                Harmless
+                            </span>
+
+                        </div>
+
+
+                        <div class="reputation-stat">
+
+                            <span
+                                class="reputation-value"
+                                id="virustotal-undetected">
+
+                                0
+
+                            </span>
+
+                            <span class="reputation-label">
+                                Undetected
+                            </span>
+
+                        </div>
+
+
+                        <div class="reputation-stat">
+
+                            <span
+                                class="reputation-value"
+                                id="virustotal-timeout">
+
+                                0
+
+                            </span>
+
+                            <span class="reputation-label">
+                                Timeout
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="virustotal-explanation"
+                        class="info-box reputation-explanation">
+
+                        Waiting for VirusTotal assessment...
+
+                    </div>
+
+                </div>
+
+
+
+    <!-- =====================================================
+         Footer
+    ===================================================== -->
+
+    <footer>
+
+        UIDetect Version 1.0
+
+        <br>
+
+        Intelligent Website Security Assessment
+
+    </footer>
+
+
+</div>
+
+
+<script src="popup.js"></script>
+
+
+</body>
+
+</html>
