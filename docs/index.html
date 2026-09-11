@@ -98,7 +98,7 @@ footer{margin-top:20px;padding:20px;text-align:center;color:#90A4AE;font-size:10
 <div class="quick-step"><span class="quick-number">4</span><h3>Load Extension</h3><p>Load UIDetect into Chrome using Developer Mode.</p></div>
 <div class="quick-step"><span class="quick-number">5</span><h3>Scan Website</h3><p>Open a website and use UIDetect to perform a security assessment.</p></div>
 </div>
-<div class="info-box"><strong>UIDetect AI Model:</strong><br>UIDetect uses the local <code>llama3.2:3b</code> model through Ollama for AI-powered security recommendations.</div>
+<div class="info-box"><strong>UIDetect AI Model:</strong><br>UIDetect uses the local <code>qwen2.5:3b</code> model through Ollama for AI-powered security recommendations.</div>
 </div>
 
 <div class="section" id="requirements">
@@ -109,7 +109,7 @@ footer{margin-top:20px;padding:20px;text-align:center;color:#90A4AE;font-size:10
 <tr><td>Google Chrome</td><td>UIDetect operates as a Chrome browser extension.</td></tr>
 <tr><td>Python 3.13.14</td><td>Runs the UIDetect backend and security assessment modules.</td></tr>
 <tr><td>Ollama</td><td>Provides the local AI service used for AI-powered recommendations.</td></tr>
-<tr><td>llama3.2:3b</td><td>Local AI model used by UIDetect through Ollama.</td></tr>
+<tr><td>qwen2.5:3b</td><td>Local AI model used by UIDetect through Ollama.</td></tr>
 <tr><td>Internet Connection</td><td>Required for website analysis and external security services.</td></tr>
 </table>
 </div>
@@ -133,8 +133,8 @@ footer{margin-top:20px;padding:20px;text-align:center;color:#90A4AE;font-size:10
 <p>Ollama provides the local AI environment used by UIDetect for AI-powered security recommendations. If Ollama is already installed, users do not need to install it again. If it is not available, install Ollama manually before continuing.</p>
 <div class="step-box"><strong>Step 1 — Download Ollama</strong><p>Download Ollama from the official website.</p><a href="https://ollama.com/" target="_blank" rel="noopener noreferrer" class="button">Download Ollama</a></div>
 <div class="step-box"><strong>Step 2 — Install Ollama</strong><ol class="numbered"><li>Open the downloaded installer.</li><li>Follow the installation instructions.</li><li>Complete the installation.</li></ol></div>
-<div class="step-box"><strong>Step 3 — Install the UIDetect AI Model</strong><p>Open Command Prompt or PowerShell and run:</p><div class="code-box">ollama pull llama3.2:3b</div></div>
-<div class="step-box"><strong>Step 4 — Verify the Model</strong><p>Run:</p><div class="code-box">ollama list</div><p>Confirm that <strong>llama3.2:3b</strong> appears in the model list.</p></div>
+<div class="step-box"><strong>Step 3 — Install the UIDetect AI Model</strong><p>Open Command Prompt or PowerShell and run:</p><div class="code-box">ollama pull qwen2.5:3b</div></div>
+<div class="step-box"><strong>Step 4 — Verify the Model</strong><p>Run:</p><div class="code-box">ollama list</div><p>Confirm that <strong>qwen2.5:3b</strong> appears in the model list.</p></div>
 <div class="info-box">Ollama must be available when UIDetect performs AI-powered analysis.</div>
 </div>
 
@@ -334,10 +334,10 @@ file://</div>
 <p>Also check that your computer has an active internet connection.</p>
 
 <h3>AI Recommendation is unavailable</h3>
-<p>Check that Ollama is installed, the required llama3.2 3B model is available, and the UIDetect backend is running.</p>
+<p>Check that Ollama is installed, the required qwen2.5 3B model is available, and the UIDetect backend is running.</p>
 <div class="code-box">ollama list</div>
 <p>Confirm that:</p>
-<div class="code-box">llama3.2:3b</div>
+<div class="code-box">qwen2.5:3b</div>
 
 <h3>Scan is taking too long</h3>
 <p>Wait for the security checks and AI assessment to finish. If you do not want to continue the current scan, use the <strong>Cancel Scan</strong> button when it is available. You can start a new scan after cancellation.</p>
@@ -363,7 +363,7 @@ file://</div>
 <div class="quick-step"><span class="quick-number">✓</span><h3>Installer</h3><p>UIDetect_Setup.exe has been run successfully.</p></div>
 <div class="quick-step"><span class="quick-number">✓</span><h3>Python</h3><p>Python is installed and available.</p></div>
 <div class="quick-step"><span class="quick-number">✓</span><h3>Ollama</h3><p>Ollama is installed and available.</p></div>
-<div class="quick-step"><span class="quick-number">✓</span><h3>AI Model</h3><p>llama3.2:3b is installed.</p></div>
+<div class="quick-step"><span class="quick-number">✓</span><h3>AI Model</h3><p>qwen2.5:3b is installed.</p></div>
 <div class="quick-step"><span class="quick-number">✓</span><h3>Backend</h3><p>UIDetect backend is running.</p></div>
 <div class="quick-step"><span class="quick-number">✓</span><h3>Chrome Extension</h3><p>UIDetect is loaded and enabled.</p></div>
 <div class="quick-step"><span class="quick-number">✓</span><h3>Website Scan</h3><p>UIDetect can perform a website assessment.</p></div>
