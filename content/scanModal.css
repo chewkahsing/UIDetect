@@ -1,1 +1,825 @@
+/* =====================================
+UIDetect Security Modal
+===================================== */
 
+#uidetect-security-modal
+{
+
+    position:fixed;
+
+    top:0;
+
+    left:0;
+
+    width:100vw;
+
+    height:100vh;
+
+    background:
+    rgba(0,0,0,0.55);
+
+    z-index:999999;
+
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:16px;
+
+    box-sizing:border-box;
+
+    overflow:hidden;
+
+    font-family:
+    Arial, sans-serif;
+
+}
+
+
+
+/* =====================================
+Modal Box
+===================================== */
+
+.uidetect-modal-box
+{
+    width:min(520px, calc(100vw - 32px));
+
+    max-height:calc(100vh - 32px);
+
+    box-sizing:border-box;
+
+    overflow-y:auto;
+
+    overflow-x:hidden;
+
+    background:#ffffff;
+
+    color:#222;
+
+    border-radius:16px;
+
+    padding:22px;
+
+    box-shadow:
+    0 10px 30px
+    rgba(0,0,0,0.35);
+
+    animation:
+    popupShow 0.3s ease;
+}
+
+
+
+/* =====================================
+Popup Animation
+===================================== */
+
+@keyframes popupShow
+{
+
+    from
+    {
+
+        transform:
+        scale(0.8);
+
+        opacity:0;
+
+    }
+
+
+    to
+    {
+
+        transform:
+        scale(1);
+
+        opacity:1;
+
+    }
+
+}
+
+
+
+/* =====================================
+Header
+===================================== */
+
+.uidetect-header
+{
+
+    background:#1e3a8a;
+
+    color:white;
+
+    padding:14px;
+
+    border-radius:12px;
+
+
+    text-align:center;
+
+    font-size:19px;
+
+    font-weight:bold;
+
+    margin-bottom:18px;
+
+}
+
+
+
+/* =====================================
+Content
+===================================== */
+
+.uidetect-content
+{
+
+    width:100%;
+
+}
+
+
+
+.uidetect-url
+{
+    color:#374151;
+
+    font-size:13px;
+
+    line-height:1.4;
+
+    word-break:break-all;
+
+    overflow-wrap:anywhere;
+
+    text-align:right;
+
+    max-width:65%;
+
+    min-width:0;
+}
+
+
+
+/* =====================================
+Security Verdict
+===================================== */
+
+.uidetect-verdict
+{
+
+    border-radius:10px;
+
+    padding:13px;
+
+    margin:12px 0;
+
+
+    text-align:center;
+
+    border:1px solid transparent;
+
+}
+
+
+
+.uidetect-verdict-status
+{
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    margin-bottom:4px;
+
+}
+
+
+
+.uidetect-verdict-risk
+{
+
+    font-size:13px;
+
+    font-weight:bold;
+
+}
+
+
+
+/* =====================================
+OpenPhish Detected
+===================================== */
+
+.uidetect-verdict.phishing-detected
+{
+
+    background:#fef2f2;
+
+    border-color:#fecaca;
+
+}
+
+
+
+.uidetect-verdict.phishing-detected
+.uidetect-verdict-status
+{
+
+    color:#dc2626;
+
+}
+
+
+
+.uidetect-verdict.phishing-detected
+.uidetect-verdict-risk
+{
+
+    color:#991b1b;
+
+}
+
+
+
+/* =====================================
+OpenPhish Safe
+===================================== */
+
+.uidetect-verdict.phishing-safe
+{
+
+    background:#f0fdf4;
+
+    border-color:#bbf7d0;
+
+}
+
+
+
+.uidetect-verdict.phishing-safe
+.uidetect-verdict-status
+{
+
+    color:#16a34a;
+
+}
+
+
+
+.uidetect-verdict.phishing-safe
+.uidetect-verdict-risk
+{
+
+    color:#166534;
+
+}
+
+
+
+/* =====================================
+Assessment Row
+===================================== */
+
+.uidetect-row
+{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+
+    background:#f3f4f6;
+
+    padding:11px 12px;
+
+    border-radius:8px;
+
+    margin:10px 0;
+
+}
+
+
+
+.uidetect-row b
+{
+
+    color:#111827;
+
+    font-size:14px;
+
+}
+
+
+
+.uidetect-score
+{
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    color:#1e3a8a;
+
+}
+
+
+
+/* =====================================
+Information Section
+===================================== */
+
+.uidetect-section
+{
+
+    margin-top:14px;
+
+}
+
+
+
+.uidetect-section h3
+{
+
+    color:#1f2937;
+
+    font-size:15px;
+
+    margin:0 0 5px 0;
+
+}
+
+
+
+.uidetect-section p
+{
+
+    margin:0;
+
+    color:#374151;
+
+    font-size:14px;
+
+    line-height:1.5;
+
+}
+
+
+
+/* =====================================
+Buttons
+===================================== */
+
+.uidetect-buttons
+{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-top:20px;
+
+}
+
+
+
+.uidetect-buttons button
+{
+
+    flex:1;
+
+    padding:11px 10px;
+
+    border:none;
+
+    border-radius:10px;
+
+
+    font-size:14px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+}
+
+#uidetect-ok
+{
+
+    width:100%;
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+#uidetect-ok:hover
+{
+
+    background:#1d4ed8;
+
+}
+
+
+/* =====================================
+OpenPhish Warning Button
+===================================== */
+
+#uidetect-proceed.uidetect-proceed-warning
+{
+
+    background:#dc2626;
+
+    color:white;
+
+}
+
+
+
+#uidetect-proceed.uidetect-proceed-warning:hover
+{
+
+    background:#b91c1c;
+
+}
+
+
+/* =====================================
+Loading Popup
+===================================== */
+
+.uidetect-modal-box.uidetect-loading-modal
+{
+    position:relative;
+
+    width:min(420px, calc(100vw - 32px));
+
+    max-height:calc(100vh - 32px);
+
+    box-sizing:border-box;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    padding:30px 25px;
+}
+
+
+
+.uidetect-modal-box.uidetect-loading-modal h2
+{
+
+    color:#1e3a8a;
+
+    margin-bottom:8px;
+
+}
+
+
+
+.uidetect-modal-box.uidetect-loading-modal p
+{
+
+    color:#374151;
+
+    margin:8px 0;
+
+}
+
+
+
+.uidetect-modal-box.uidetect-loading-modal small
+{
+
+    color:#6b7280;
+
+}
+
+
+/* =====================================
+Loading Popup Buttons
+===================================== */
+
+.uidetect-loading-modal .uidetect-buttons
+{
+    width:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    margin-top:20px;
+}
+
+
+/* =====================================
+Loading Skip Button
+===================================== */
+
+.uidetect-loading-modal #uidetect-skip-scan
+{
+    position:absolute;
+
+    top:12px;
+
+    right:12px;
+
+    width:auto;
+
+    min-width:0;
+
+    flex:none;
+
+    padding:6px 12px;
+
+    border:none;
+
+    border-radius:6px;
+
+    background:#e5e7eb;
+
+    color:#374151;
+
+    font-size:12px;
+
+    font-weight:bold;
+
+    line-height:1.2;
+
+    cursor:pointer;
+
+    transition:
+    background 0.2s ease,
+    opacity 0.2s ease;
+}
+
+
+.uidetect-loading-modal #uidetect-skip-scan:hover
+{
+    background:#d1d5db;
+}
+
+/* =====================================
+Loading Cancel Button
+===================================== */
+
+#uidetect-cancel-scan
+{
+    width:100%;
+
+    flex:none;
+
+    margin-top:0;
+
+    padding:11px 10px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#dc2626;
+
+    color:white;
+
+    font-size:14px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:
+    background 0.2s ease,
+    opacity 0.2s ease;
+}
+
+
+#uidetect-cancel-scan:hover
+{
+
+    background:#b91c1c;
+
+}
+
+
+#uidetect-cancel-scan:disabled
+{
+
+    background:#9ca3af;
+
+    cursor:not-allowed;
+
+    opacity:0.8;
+
+}
+
+
+
+/* =====================================
+Loading Spinner
+===================================== */
+
+.uidetect-loading-modal .uidetect-spinner
+{
+
+    width:45px;
+
+    height:45px;
+
+
+    border:5px solid #ddd;
+
+    border-top:
+    5px solid #2563eb;
+
+
+    border-radius:50%;
+
+
+    margin:
+    0 auto 20px;
+
+
+    animation:
+    spin 1s linear infinite;
+
+}
+
+
+
+@keyframes spin
+{
+
+    from
+    {
+
+        transform:
+        rotate(0deg);
+
+    }
+
+
+    to
+    {
+
+        transform:
+        rotate(360deg);
+
+    }
+
+}
+
+/* =====================================
+AI About Website Section
+===================================== */
+
+.uidetect-about
+{
+    background:#f8fafc;
+
+    border:1px solid #e5e7eb;
+
+    border-radius:10px;
+
+    padding:12px;
+
+    margin-top:14px;
+}
+
+
+.uidetect-about h3
+{
+    color:#1f2937;
+
+    font-size:15px;
+
+    margin:0 0 6px 0;
+}
+
+
+.uidetect-about p
+{
+    color:#374151;
+
+    font-size:14px;
+
+    line-height:1.5;
+
+    margin:0;
+}
+
+/* =====================================
+Overall Risk States
+===================================== */
+
+.uidetect-verdict.risk-critical
+{
+    background:#fef2f2;
+    border-color:#fecaca;
+}
+
+.uidetect-verdict.risk-critical
+.uidetect-verdict-status
+{
+    color:#dc2626;
+}
+
+.uidetect-verdict.risk-critical
+.uidetect-verdict-risk
+{
+    color:#991b1b;
+}
+
+
+.uidetect-verdict.risk-high
+{
+    background:#fff7ed;
+    border-color:#fed7aa;
+}
+
+.uidetect-verdict.risk-high
+.uidetect-verdict-status
+{
+    color:#ea580c;
+}
+
+.uidetect-verdict.risk-high
+.uidetect-verdict-risk
+{
+    color:#9a3412;
+}
+
+
+.uidetect-verdict.risk-medium
+{
+    background:#fffbeb;
+    border-color:#fde68a;
+}
+
+.uidetect-verdict.risk-medium
+.uidetect-verdict-status
+{
+    color:#d97706;
+}
+
+.uidetect-verdict.risk-medium
+.uidetect-verdict-risk
+{
+    color:#92400e;
+}
+
+
+.uidetect-verdict.risk-low
+{
+    background:#f0fdf4;
+    border-color:#bbf7d0;
+}
+
+.uidetect-verdict.risk-low
+.uidetect-verdict-status
+{
+    color:#16a34a;
+}
+
+.uidetect-verdict.risk-low
+.uidetect-verdict-risk
+{
+    color:#166534;
+}
+
+
+.uidetect-verdict.risk-unknown
+{
+    background:#f8fafc;
+    border-color:#d1d5db;
+}
+
+.uidetect-verdict.risk-unknown
+.uidetect-verdict-status
+{
+    color:#475569;
+}
+
+.uidetect-verdict.risk-unknown
+.uidetect-verdict-risk
+{
+    color:#334155;
+}
