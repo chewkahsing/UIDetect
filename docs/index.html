@@ -5,29 +5,74 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UIDetect Extension User Manual | Website Security Assessment</title>
 <meta name="description" content="Official UIDetect Extension User Manual. Learn how to install UIDetect, scan websites, understand security assessments, and use UIDetect security features.">
+
 <style>
 body{margin:0;padding:0;background:linear-gradient(180deg,#EEF4FB 0%,#F7F9FC 45%,#F4F6F9 100%);font-family:Arial,Helvetica,sans-serif;color:#263238;line-height:1.6}
 .container{width:90%;max-width:1050px;margin:0 auto;padding:35px 0 50px}
 .header,.navigation,.section{background:#fff;border:1px solid #E1E7EF;border-radius:12px;box-shadow:0 3px 10px rgba(21,101,192,.06)}
 .header{border-radius:14px;padding:35px 30px;text-align:center;box-shadow:0 4px 14px rgba(21,101,192,.08)}
-.logo{width:76px;height:76px;margin-bottom:10px}.header h1{margin:0 0 6px;color:#1565C0;font-size:32px}.header p{margin:0;color:#607D8B;font-size:14px}
+.logo{width:76px;height:76px;margin-bottom:10px}
+.header h1{margin:0 0 6px;color:#1565C0;font-size:32px}
+.header p{margin:0;color:#607D8B;font-size:14px}
 .version{display:inline-block;margin-top:12px;padding:4px 10px;border-radius:20px;background:#E3F2FD;color:#1565C0;font-size:11px;font-weight:bold}
-.navigation{padding:18px 20px;margin-top:15px}.navigation h2{margin:0 0 10px;font-size:17px}.navigation a{display:inline-block;margin:4px 5px 4px 0;padding:6px 10px;border-radius:6px;background:#F1F7FD;color:#1565C0;text-decoration:none;font-size:11px;font-weight:bold}.navigation a:hover{background:#E3F2FD}
-.section{padding:25px;margin-top:15px}.section-heading{margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid #EDF0F3}.section-label{display:block;color:#78909C;font-size:10px;font-weight:bold;letter-spacing:1px}.section-heading h2{margin:3px 0 0;color:#263238;font-size:21px}
-.section h3{color:#1565C0;font-size:16px;margin-top:25px}.section p{color:#455A64;font-size:13px;line-height:21px}
-.quick-start,.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:15px}.feature-grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
-.quick-step,.feature{padding:14px;border:1px solid #E5EAF0;border-radius:9px;background:#F9FAFC}.quick-number{display:inline-flex;align-items:center;justify-content:center;width:27px;height:27px;border-radius:50%;background:#1565C0;color:#fff;font-size:12px;font-weight:bold}.quick-step h3,.feature h3{margin:9px 0 5px;color:#263238;font-size:14px}.quick-step p,.feature p{margin:0;font-size:11px;line-height:18px}
-.step-box{margin-top:15px;padding:15px;border:1px solid #DDE7F0;border-radius:9px;background:#F7FAFC}.step-box strong{color:#263238;font-size:13px}.step-box p{margin:5px 0}
-.numbered{padding-left:22px}.numbered li{margin-bottom:8px;color:#455A64;font-size:13px}
+
+.navigation{padding:18px 20px;margin-top:15px}
+.navigation h2{margin:0 0 10px;font-size:17px}
+.navigation a{display:inline-block;margin:4px 5px 4px 0;padding:6px 10px;border-radius:6px;background:#F1F7FD;color:#1565C0;text-decoration:none;font-size:11px;font-weight:bold}
+.navigation a:hover{background:#E3F2FD}
+
+.section{padding:25px;margin-top:15px}
+.section-heading{margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid #EDF0F3}
+.section-label{display:block;color:#78909C;font-size:10px;font-weight:bold;letter-spacing:1px}
+.section-heading h2{margin:3px 0 0;color:#263238;font-size:21px}
+.section h3{color:#1565C0;font-size:16px;margin-top:25px}
+.section p{color:#455A64;font-size:13px;line-height:21px}
+
+.quick-start,.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:15px}
+.feature-grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.quick-step,.feature{padding:14px;border:1px solid #E5EAF0;border-radius:9px;background:#F9FAFC}
+.quick-number{display:inline-flex;align-items:center;justify-content:center;width:27px;height:27px;border-radius:50%;background:#1565C0;color:#fff;font-size:12px;font-weight:bold}
+.quick-step h3,.feature h3{margin:9px 0 5px;color:#263238;font-size:14px}
+.quick-step p,.feature p{margin:0;font-size:11px;line-height:18px}
+
+.step-box{margin-top:15px;padding:15px;border:1px solid #DDE7F0;border-radius:9px;background:#F7FAFC}
+.step-box strong{color:#263238;font-size:13px}
+.step-box p{margin:5px 0}
+
+.numbered{padding-left:22px}
+.numbered li{margin-bottom:8px;color:#455A64;font-size:13px}
+
 .code-box{margin-top:10px;padding:12px;border-radius:7px;background:#263238;color:#fff;font-family:Consolas,"Courier New",monospace;font-size:12px;overflow-x:auto;white-space:pre-wrap}
-.info-box,.warning-box,.danger-box{margin-top:12px;padding:12px;border-radius:6px;font-size:12px;line-height:19px}.info-box{border-left:4px solid #90CAF9;background:#F1F7FD;color:#455A64}.warning-box{border-left:4px solid #FFB74D;background:#FFF8E8;color:#6D4C41}.danger-box{border-left:4px solid #EF5350;background:#FFF5F5;color:#6D3434}
-.status{display:inline-flex;align-items:center;justify-content:center;padding:4px 9px;border-radius:15px;font-size:10px;font-weight:bold}.safe{background:#E8F5E9;color:#2E7D32}.warning{background:#FFF3E0;color:#EF6C00}.danger{background:#FFEBEE;color:#C62828}.unknown{background:#ECEFF1;color:#607D8B}
-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:12px}th{padding:9px;text-align:left;background:#F1F7FD;color:#37474F;border:1px solid #E1E7EF}td{padding:9px;color:#455A64;border:1px solid #E1E7EF;vertical-align:top}
-.button{display:inline-block;margin-top:10px;padding:9px 15px;border-radius:7px;background:linear-gradient(135deg,#1976D2,#1565C0);color:#fff;text-decoration:none;font-size:12px;font-weight:bold}.button:hover{background:linear-gradient(135deg,#1565C0,#0D47A1)}
+
+.info-box,.warning-box,.danger-box{margin-top:12px;padding:12px;border-radius:6px;font-size:12px;line-height:19px}
+.info-box{border-left:4px solid #90CAF9;background:#F1F7FD;color:#455A64}
+.warning-box{border-left:4px solid #FFB74D;background:#FFF8E8;color:#6D4C41}
+.danger-box{border-left:4px solid #EF5350;background:#FFF5F5;color:#6D3434}
+
+.status{display:inline-flex;align-items:center;justify-content:center;padding:4px 9px;border-radius:15px;font-size:10px;font-weight:bold}
+.safe{background:#E8F5E9;color:#2E7D32}
+.warning{background:#FFF3E0;color:#EF6C00}
+.danger{background:#FFEBEE;color:#C62828}
+.unknown{background:#ECEFF1;color:#607D8B}
+
+table{width:100%;border-collapse:collapse;margin-top:12px;font-size:12px}
+th{padding:9px;text-align:left;background:#F1F7FD;color:#37474F;border:1px solid #E1E7EF}
+td{padding:9px;color:#455A64;border:1px solid #E1E7EF;vertical-align:top}
+
+.button{display:inline-block;margin-top:10px;padding:9px 15px;border-radius:7px;background:linear-gradient(135deg,#1976D2,#1565C0);color:#fff;text-decoration:none;font-size:12px;font-weight:bold}
+.button:hover{background:linear-gradient(135deg,#1565C0,#0D47A1)}
+
 footer{margin-top:20px;padding:20px;text-align:center;color:#90A4AE;font-size:10px}
-@media(max-width:650px){.container{width:94%;padding-top:15px}.section{padding:18px}.header h1{font-size:26px}table{display:block;overflow-x:auto}}
+
+@media(max-width:650px){
+.container{width:94%;padding-top:15px}
+.section{padding:18px}
+.header h1{font-size:26px}
+table{display:block;overflow-x:auto}
+}
 </style>
 </head>
+
 <body>
 <div class="container">
 
@@ -66,230 +111,500 @@ footer{margin-top:20px;padding:20px;text-align:center;color:#90A4AE;font-size:10
 <a href="#security-notice">Security Notice</a>
 </div>
 
-<div class="section">
-<div class="section-heading"><span class="section-label">HOW TO USE THIS MANUAL</span><h2>Start Here</h2></div>
-<p>For first-time users, follow the sections in order: <strong>Start Here → Quick Start → Requirements → UIDetect Setup → Using UIDetect → Understanding Results → Troubleshooting</strong>.</p>
-<div class="info-box">The manual is organized around the user journey: install UIDetect, prepare its local components, load the Chrome extension, perform an assessment, understand the result, and troubleshoot common problems.</div>
-</div>
+
+<!-- START HERE -->
 
 <div class="section">
-<div class="section-heading"><span class="section-label">INTRODUCTION</span><h2>What is UIDetect?</h2></div>
-<p>UIDetect is a Chrome browser extension designed to help users understand the security condition of a website before interacting with it.</p>
-<p>UIDetect combines multiple security checks and presents the results in a simple dashboard so that users without cybersecurity knowledge can understand potential website risks.</p>
-<div class="info-box">UIDetect is a security assessment tool. A positive result does not guarantee that a website is completely safe.</div>
+<div class="section-heading">
+<span class="section-label">HOW TO USE THIS MANUAL</span>
+<h2>Start Here</h2>
 </div>
+
+<p>
+For first-time users, follow the sections in order:
+<strong>Start Here → Quick Start → Requirements → UIDetect Setup → Using UIDetect → Understanding Results → Troubleshooting</strong>.
+</p>
+
+<div class="info-box">
+The manual follows the normal UIDetect user journey:
+install UIDetect, allow the installer to prepare the required components, start UIDetect, load the Chrome extension, perform an assessment, understand the results, and troubleshoot common problems.
+</div>
+</div>
+
+
+<!-- INTRODUCTION -->
+
+<div class="section">
+<div class="section-heading">
+<span class="section-label">INTRODUCTION</span>
+<h2>What is UIDetect?</h2>
+</div>
+
+<p>
+UIDetect is a Chrome browser extension designed to help users understand the security condition of a website before interacting with it.
+</p>
+
+<p>
+UIDetect combines multiple security checks and presents the results in a simple dashboard so that users without cybersecurity knowledge can understand potential website risks.
+</p>
+
+<div class="info-box">
+UIDetect is a security assessment tool. A positive result does not guarantee that a website is completely safe.
+</div>
+</div>
+
+
+<!-- STARTUP -->
 
 <div class="section" id="startup">
-<div class="section-heading"><span class="section-label">STARTUP</span><h2>Start Using UIDetect</h2></div>
-<p>The recommended way to start UIDetect is to run the installer:</p>
-<div class="code-box">installer\UIDetect_Setup.exe</div>
-<p>The installer handles the required UIDetect setup and starts the required components.</p>
-<div class="info-box">The installer runs <code>Install_UIDetect.bat</code> for the required setup process and <code>Start_UIDetect.bat</code> to start UIDetect.</div>
-<div class="warning-box"><strong>Normal User Workflow:</strong><br><br>Run <code>UIDetect_Setup.exe</code>.<br><br>Do not manually run <code>Install_UIDetect.bat</code> or <code>Start_UIDetect.bat</code> unless manual troubleshooting or recovery is required.</div>
+<div class="section-heading">
+<span class="section-label">STARTUP</span>
+<h2>Start Using UIDetect</h2>
 </div>
+
+<p>
+The recommended way to install and start UIDetect is to run:
+</p>
+
+<div class="code-box">UIDetect_Setup.exe</div>
+
+<p>
+The installer installs the UIDetect application and automatically prepares the required software components.
+</p>
+
+<div class="info-box">
+<strong>Automatic Setup:</strong><br><br>
+The installer checks for the required Python version, Ollama and the UIDetect AI model.
+If a required component is missing, the installer downloads and installs it automatically.
+</div>
+
+<div class="step-box">
+<strong>Normal User Workflow</strong>
+
+<ol class="numbered">
+<li>Run <strong>UIDetect_Setup.exe</strong>.</li>
+<li>Follow the installation progress shown by the installer.</li>
+<li>Wait until the installation is completed successfully.</li>
+<li>Launch UIDetect when the installation is complete.</li>
+<li>Use the UIDetect Launcher to continue with the Chrome extension setup.</li>
+</ol>
+</div>
+
+<div class="warning-box">
+<strong>Internet Connection Required:</strong><br><br>
+An Internet connection is required during installation if Python, Ollama, the AI model or other required components need to be downloaded.
+</div>
+
+<div class="warning-box">
+<strong>Important:</strong><br><br>
+Do not manually run <code>Install_UIDetect.bat</code> or <code>Start_UIDetect.bat</code> during normal installation.
+These files are used by the UIDetect installation and startup process.
+</div>
+</div>
+
+
+<!-- QUICK START -->
 
 <div class="section" id="quick-start">
-<div class="section-heading"><span class="section-label">QUICK START</span><h2>Get UIDetect Running</h2></div>
-<p>Start by running the UIDetect installer. The installer handles the required UIDetect setup and startup process.</p>
+<div class="section-heading">
+<span class="section-label">QUICK START</span>
+<h2>Get UIDetect Running</h2>
+</div>
+
+<p>
+Run the UIDetect installer and wait for the installation process to complete.
+</p>
+
 <div class="quick-start">
-<div class="quick-step"><span class="quick-number">1</span><h3>Run UIDetect Installer</h3><p>Run the provided installer to install and start the required UIDetect components.</p></div>
-<div class="quick-step"><span class="quick-number">2</span><h3>Check Python</h3><p>UIDetect requires Python 3.13.14 for its local backend. The installer checks whether Python is available.</p></div>
-<div class="quick-step"><span class="quick-number">3</span><h3>Check Ollama</h3><p>Ollama provides the local AI service used by UIDetect. The installer checks whether Ollama is available.</p></div>
-<div class="quick-step"><span class="quick-number">4</span><h3>Load Extension</h3><p>Load UIDetect into Chrome using Developer Mode.</p></div>
-<div class="quick-step"><span class="quick-number">5</span><h3>Scan Website</h3><p>Open a website and use UIDetect to perform a security assessment.</p></div>
+
+<div class="quick-step">
+<span class="quick-number">1</span>
+<h3>Run Installer</h3>
+<p>Run <strong>UIDetect_Setup.exe</strong> to begin the installation.</p>
 </div>
-<div class="info-box"><strong>UIDetect AI Model:</strong><br>UIDetect uses the local <code>qwen2.5:3b</code> model through Ollama for AI-powered security recommendations.</div>
+
+<div class="quick-step">
+<span class="quick-number">2</span>
+<h3>Install Components</h3>
+<p>The installer checks and installs the required Python version and Ollama when necessary.</p>
 </div>
+
+<div class="quick-step">
+<span class="quick-number">3</span>
+<h3>Install AI Model</h3>
+<p>The installer checks for <code>qwen2.5:3b</code> and downloads it automatically if it is missing.</p>
+</div>
+
+<div class="quick-step">
+<span class="quick-number">4</span>
+<h3>Start UIDetect</h3>
+<p>Launch UIDetect and keep the UIDetect Launcher running while using the extension.</p>
+</div>
+
+<div class="quick-step">
+<span class="quick-number">5</span>
+<h3>Load Extension</h3>
+<p>Use <strong>Open Chrome</strong> in the launcher and load UIDetect using Developer Mode.</p>
+</div>
+
+<div class="quick-step">
+<span class="quick-number">6</span>
+<h3>Scan Website</h3>
+<p>Open a website and use UIDetect to perform a security assessment.</p>
+</div>
+
+</div>
+
+<div class="info-box">
+<strong>UIDetect AI Model:</strong><br>
+UIDetect uses the local <code>qwen2.5:3b</code> model through Ollama for AI-powered security recommendations.
+</div>
+
+<div class="info-box">
+<strong>Installation Progress:</strong><br>
+The installer displays the current installation stage and progress.
+Downloading Python, Ollama or the AI model may take some time depending on the Internet connection and computer performance.
+</div>
+</div>
+
+
+<!-- REQUIREMENTS -->
 
 <div class="section" id="requirements">
-<div class="section-heading"><span class="section-label">REQUIREMENTS</span><h2>System Requirements</h2></div>
-<p>Make sure the following software is available before using UIDetect.</p>
-<table><tr><th>Requirement</th><th>Purpose</th></tr>
-<tr><td>Windows Computer</td><td>Used to run the UIDetect backend and browser extension.</td></tr>
-<tr><td>Google Chrome</td><td>UIDetect operates as a Chrome browser extension.</td></tr>
-<tr><td>Python 3.13.14</td><td>Runs the UIDetect backend and security assessment modules.</td></tr>
-<tr><td>Ollama</td><td>Provides the local AI service used for AI-powered recommendations.</td></tr>
-<tr><td>qwen2.5:3b</td><td>Local AI model used by UIDetect through Ollama.</td></tr>
-<tr><td>Internet Connection</td><td>Required for website analysis and external security services.</td></tr>
-</table>
+<div class="section-heading">
+<span class="section-label">REQUIREMENTS</span>
+<h2>System Requirements</h2>
 </div>
+
+<p>
+The UIDetect installer automatically checks and prepares the required software components.
+</p>
+
+<table>
+<tr>
+<th>Requirement</th>
+<th>Purpose</th>
+<th>Installation</th>
+</tr>
+
+<tr>
+<td>Windows Computer</td>
+<td>Used to run the UIDetect application, backend and browser extension.</td>
+<td>Required</td>
+</tr>
+
+<tr>
+<td>Google Chrome</td>
+<td>Used to run the UIDetect browser extension.</td>
+<td>User provides</td>
+</tr>
+
+<tr>
+<td>Python 3.13.14</td>
+<td>Runs the UIDetect backend and security assessment modules.</td>
+<td>Automatically checked and installed when required</td>
+</tr>
+
+<tr>
+<td>Ollama</td>
+<td>Provides the local AI service used for AI-powered recommendations.</td>
+<td>Automatically checked and installed when required</td>
+</tr>
+
+<tr>
+<td>qwen2.5:3b</td>
+<td>Local AI model used by UIDetect through Ollama.</td>
+<td>Automatically checked and downloaded when required</td>
+</tr>
+
+<tr>
+<td>Internet Connection</td>
+<td>Required for website analysis, external security services and downloading missing components.</td>
+<td>User provides</td>
+</tr>
+</table>
+
+<div class="info-box">
+If Python 3.13.14, Ollama or <code>qwen2.5:3b</code> is already available, the installer checks the existing component before installing or downloading it.
+</div>
+</div>
+
+
+<!-- SETUP -->
 
 <div class="section" id="setup">
-<div class="section-heading"><span class="section-label">SETUP</span><h2>UIDetect Setup</h2></div>
-<p>Complete the following setup steps before using UIDetect. The normal installation starts with the UIDetect installer, followed by verification of Python, Ollama, the local backend and the Chrome extension.</p>
-<div class="info-box">For normal use, start with <strong>UIDetect_Setup.exe</strong>. Manual setup steps are provided for verification and troubleshooting.</div>
+<div class="section-heading">
+<span class="section-label">SETUP</span>
+<h2>UIDetect Setup</h2>
 </div>
+
+<p>
+The normal UIDetect installation is performed through <strong>UIDetect_Setup.exe</strong>.
+</p>
+
+<div class="step-box">
+<strong>Step 1 — Run the Installer</strong>
+<p>
+Run <strong>UIDetect_Setup.exe</strong> and follow the installation wizard.
+</p>
+</div>
+
+<div class="step-box">
+<strong>Step 2 — Allow Automatic Component Setup</strong>
+<p>
+The installer checks the required Python version, Ollama, the AI model and UIDetect Python dependencies.
+Missing components are downloaded and installed automatically.
+</p>
+</div>
+
+<div class="step-box">
+<strong>Step 3 — Wait for Installation</strong>
+<p>
+The installer displays the current installation progress.
+Do not close the installer while the installation is running.
+</p>
+</div>
+
+<div class="step-box">
+<strong>Step 4 — Start UIDetect</strong>
+<p>
+After installation is complete, launch UIDetect.
+The UIDetect Launcher starts the local backend automatically.
+</p>
+</div>
+
+<div class="step-box">
+<strong>Step 5 — Load the Chrome Extension</strong>
+<p>
+Use the <strong>Open Chrome</strong> button in the UIDetect Launcher and follow the Chrome extension setup instructions.
+</p>
+</div>
+
+<div class="info-box">
+Manual installation of Python, Ollama and the Qwen model is not required during normal UIDetect setup.
+</div>
+</div>
+
+
+<!-- PYTHON -->
 
 <div class="section" id="python">
-<div class="section-heading"><span class="section-label">STEP 1</span><h2>Python 3.13.14</h2></div>
-<p>UIDetect uses <strong>Python 3.13.14</strong> to run its local backend. The backend performs the security assessment and communicates with the Chrome extension.</p>
-<div class="step-box"><strong>Step 1 — Check Python Installation</strong><p>The UIDetect installer handles the required setup process. After installation, open Command Prompt and run:</p><div class="code-box">python --version</div><p>Confirm that Python is available and that the installed version is suitable for the current UIDetect project.</p></div>
-<div class="step-box"><strong>Step 2 — Install Python if Required</strong><p>If Python is not available on the computer, download Python 3.13.14 from the official Python website.</p><a href="https://www.python.org/ftp/python/3.13.14/python-3.13.14-amd64.exe" target="_blank" rel="noopener noreferrer" class="button">Download Python 3.13.14</a></div>
-<div class="step-box"><strong>Step 3 — Install Python</strong><ol class="numbered"><li>Run the Python installer.</li><li>Enable <strong>"Add Python to PATH"</strong> if the option is shown.</li><li>Continue with the installation.</li><li>Complete the installation.</li></ol></div>
+<div class="section-heading">
+<span class="section-label">STEP 1</span>
+<h2>Python 3.13.14</h2>
 </div>
+
+<p>
+UIDetect uses <strong>Python 3.13.14</strong> to run its local backend and security assessment modules.
+</p>
+
+<div class="info-box">
+<strong>Automatic Installation:</strong><br><br>
+The UIDetect installer checks specifically for Python 3.13.14.
+If the required version is not available, the installer automatically downloads and installs it.
+</div>
+
+<div class="step-box">
+<strong>What the Installer Does</strong>
+
+<ol class="numbered">
+<li>Checks whether Python 3.13.14 is available.</li>
+<li>Uses the existing Python 3.13.14 installation if it is available.</li>
+<li>If Python 3.13.14 is missing, downloads the required installer.</li>
+<li>Installs Python 3.13.14.</li>
+<li>Verifies that the required Python environment is working.</li>
+</ol>
+</div>
+
+<div class="warning-box">
+<strong>Existing Python Versions:</strong><br><br>
+A different Python version, such as Python 3.14.x, does not replace the required Python 3.13.14.
+UIDetect requires Python 3.13.14 for the current project environment.
+</div>
+
+<div class="info-box">
+<strong>Advanced Verification:</strong><br><br>
+For troubleshooting, Python information can be checked using:
+<div class="code-box">python --version</div>
+</div>
+</div>
+
+
+<!-- OLLAMA -->
 
 <div class="section" id="ollama">
-<div class="section-heading"><span class="section-label">STEP 2</span><h2>Ollama</h2></div>
-<p>Ollama provides the local AI environment used by UIDetect for AI-powered security recommendations. If Ollama is already installed, users do not need to install it again. If it is not available, install Ollama manually before continuing.</p>
-<div class="step-box"><strong>Step 1 — Download Ollama</strong><p>Download Ollama from the official website.</p><a href="https://ollama.com/" target="_blank" rel="noopener noreferrer" class="button">Download Ollama</a></div>
-<div class="step-box"><strong>Step 2 — Install Ollama</strong><ol class="numbered"><li>Open the downloaded installer.</li><li>Follow the installation instructions.</li><li>Complete the installation.</li></ol></div>
-<div class="step-box"><strong>Step 3 — Install the UIDetect AI Model</strong><p>Open Command Prompt or PowerShell and run:</p><div class="code-box">ollama pull qwen2.5:3b</div></div>
-<div class="step-box"><strong>Step 4 — Verify the Model</strong><p>Run:</p><div class="code-box">ollama list</div><p>Confirm that <strong>qwen2.5:3b</strong> appears in the model list.</p></div>
-<div class="info-box">Ollama must be available when UIDetect performs AI-powered analysis.</div>
+<div class="section-heading">
+<span class="section-label">STEP 2</span>
+<h2>Ollama and AI Model</h2>
 </div>
+
+<p>
+Ollama provides the local AI service used by UIDetect for AI-powered security recommendations.
+UIDetect uses the <code>qwen2.5:3b</code> model through Ollama.
+</p>
+
+<div class="info-box">
+<strong>Automatic Installation:</strong><br><br>
+The UIDetect installer checks whether Ollama is available.
+If Ollama is missing, the installer automatically downloads and installs it.
+</div>
+
+<div class="step-box">
+<strong>What the Installer Does</strong>
+
+<ol class="numbered">
+<li>Checks whether Ollama is installed.</li>
+<li>Uses the existing Ollama installation if it is available.</li>
+<li>If Ollama is missing, downloads and installs Ollama.</li>
+<li>Checks that the Ollama service is available.</li>
+<li>Checks whether <code>qwen2.5:3b</code> is installed.</li>
+<li>If the model is missing, downloads <code>qwen2.5:3b</code> automatically.</li>
+<li>Tests communication with the AI model.</li>
+</ol>
+</div>
+
+<div class="warning-box">
+<strong>Important:</strong><br><br>
+Downloading the <code>qwen2.5:3b</code> model may take some time.
+Do not close the installer while the AI model is being downloaded or verified.
+</div>
+
+<div class="info-box">
+<strong>Existing Ollama and AI Models:</strong><br><br>
+If Ollama is already installed, the installer uses the available Ollama installation.
+Other AI models installed in Ollama are not used by UIDetect.
+UIDetect specifically requires <code>qwen2.5:3b</code>.
+</div>
+
+<div class="info-box">
+<strong>Advanced Verification:</strong><br><br>
+For troubleshooting, installed Ollama models can be checked using:
+<div class="code-box">ollama list</div>
+
+The UIDetect AI model should appear as:
+<div class="code-box">qwen2.5:3b</div>
+</div>
+
+</div>
+
+
+<!-- BACKEND -->
 
 <div class="section" id="backend">
-<div class="section-heading"><span class="section-label">STEP 3</span><h2>Start the UIDetect Backend</h2></div>
-<p>The UIDetect backend is the local server that receives requests from the Chrome extension and performs the website security assessment.</p>
-<div class="step-box"><strong>Step 1 — Keep UIDetect Running</strong><p>A Command Prompt window may appear while the UIDetect backend is running.</p><p>Keep the UIDetect backend running while using the Chrome extension.</p><div class="warning-box"><strong>Important:</strong> Do not close the UIDetect backend process while performing website security scans.</div></div>
-<div class="step-box"><strong>Step 2 — Continue to Chrome</strong><p>Once UIDetect has been started, open Google Chrome and continue with the Chrome Extension setup.</p></div>
+<div class="section-heading">
+<span class="section-label">STEP 3</span>
+<h2>Start the UIDetect Backend</h2>
 </div>
+
+<p>
+The UIDetect backend is the local server that receives requests from the Chrome extension and performs the website security assessment.
+</p>
+
+<div class="step-box">
+<strong>Step 1 — Launch UIDetect</strong>
+
+<p>
+After the installation is complete, launch UIDetect.
+The UIDetect Launcher starts the local backend automatically.
+</p>
+</div>
+
+<div class="step-box">
+<strong>Step 2 — Check System Status</strong>
+
+<p>
+The UIDetect Launcher displays the status of the backend, Ollama and the AI model.
+</p>
+
+<div class="info-box">
+UIDetect is ready when the required components show a ready or available status.
+</div>
+</div>
+
+<div class="step-box">
+<strong>Step 3 — Keep the Launcher Running</strong>
+
+<p>
+Keep the <strong>UIDetect Launcher</strong> running while using the Chrome extension.
+</p>
+
+<div class="warning-box">
+<strong>Important:</strong><br><br>
+Closing the UIDetect Launcher stops the UIDetect backend.
+The extension may not be able to perform security scans if the backend is not running.
+</div>
+</div>
+
+<div class="step-box">
+<strong>Step 4 — Continue to Chrome</strong>
+
+<p>
+Click <strong>Open Chrome</strong> in the UIDetect Launcher and continue with the Chrome Extension setup.
+</p>
+</div>
+
+</div>
+
+
+<!-- EXTENSION -->
 
 <div class="section" id="extension">
-<div class="section-heading"><span class="section-label">STEP 4</span><h2>Load UIDetect into Chrome</h2></div>
-<p>UIDetect is loaded into Chrome as an unpacked extension during development and testing.</p>
-<ol class="numbered"><li>Open Google Chrome.</li><li>Enter <strong>chrome://extensions/</strong> in the address bar.</li><li>Enable <strong>Developer mode</strong>.</li><li>Click <strong>Load unpacked</strong>.</li><li>Select the UIDetect extension folder.</li><li>Confirm that UIDetect appears in the Chrome extension list.</li><li>Pin UIDetect to the Chrome toolbar for easier access.</li></ol>
-<div class="info-box">If Chrome displays an extension error, check that the selected folder contains the UIDetect manifest.json file.</div>
+<div class="section-heading">
+<span class="section-label">STEP 4</span>
+<h2>Load UIDetect into Chrome</h2>
 </div>
 
-<div class="section" id="dashboard">
-<div class="section-heading"><span class="section-label">UIDETECT DASHBOARD</span><h2>Understanding the Dashboard</h2></div>
-<p>The UIDetect dashboard presents the results of the website security assessment in several sections.</p>
-<div class="feature-grid">
-<div class="feature"><h3>Current Website</h3><p>Shows the website currently being analyzed and its URL.</p></div>
-<div class="feature"><h3>Security Score</h3><p>Provides an overall indication of the website's security condition.</p></div>
-<div class="feature"><h3>Core Protection</h3><p>Checks HTTPS, SSL Certificate, TLS and Google Safe Browsing.</p></div>
-<div class="feature"><h3>Website Security</h3><p>Checks important browser and server security protections.</p></div>
-<div class="feature"><h3>Domain Information</h3><p>Provides WHOIS status, domain age and registrar information.</p></div>
-<div class="feature"><h3>VirusTotal Analysis</h3><p>Uses VirusTotal results as an additional website reputation indicator.</p></div>
-<div class="feature"><h3>OpenPhish Assessment</h3><p>Provides an additional phishing reputation indicator.</p></div>
-<div class="feature"><h3>AI Recommendation</h3><p>Converts technical security results into an easier-to-understand recommendation.</p></div>
-<div class="feature"><h3>Context Assessment</h3><p>Assesses security-sensitive actions such as login, upload and payment.</p></div>
+<p>
+UIDetect is loaded into Chrome as an unpacked extension during development and testing.
+</p>
+
+<div class="step-box">
+<strong>Load the Extension</strong>
+
+<ol class="numbered">
+<li>Start UIDetect.</li>
+<li>Click <strong>Open Chrome</strong> in the UIDetect Launcher.</li>
+<li>If necessary, open <strong>chrome://extensions/</strong> manually.</li>
+<li>Enable <strong>Developer mode</strong>.</li>
+<li>Click <strong>Load unpacked</strong>.</li>
+<li>Select the main UIDetect installation folder.</li>
+<li>Confirm that the selected folder contains <code>manifest.json</code>.</li>
+<li>Click <strong>Select Folder</strong>.</li>
+<li>Confirm that UIDetect appears in the Chrome extension list.</li>
+<li>Pin UIDetect to the Chrome toolbar if desired.</li>
+</ol>
+</div>
+
+<div class="warning-box">
+<strong>Important:</strong><br><br>
+Select the main UIDetect installation folder.
+Do not select one of its subfolders.
+The selected folder must contain the UIDetect <code>manifest.json</code> file.
+</div>
+
+<div class="info-box">
+UIDetect is currently loaded as an unpacked extension for development and testing.
+It is not installed through the Chrome Web Store.
 </div>
 </div>
 
-<div class="section" id="results">
-<div class="section-heading"><span class="section-label">UNDERSTANDING RESULTS</span><h2>Security Score</h2></div>
-<p>UIDetect combines multiple security indicators to produce an overall security score.</p>
-<table><tr><th>Security Level</th><th>Score</th><th>Meaning</th></tr>
-<tr><td><span class="status safe">Excellent</span></td><td>90–100</td><td>Strong security indicators were detected.</td></tr>
-<tr><td><span class="status safe">Good</span></td><td>70–89</td><td>The website generally shows good security protection.</td></tr>
-<tr><td><span class="status warning">Moderate</span></td><td>50–69</td><td>Some security weaknesses were detected.</td></tr>
-<tr><td><span class="status danger">Poor</span></td><td>0–49</td><td>Significant security weaknesses may exist.</td></tr>
-</table>
-<div class="warning-box">A high security score does not guarantee that a website is completely safe. Users should consider the other security indicators before providing sensitive information.</div>
-</div>
 
-<div class="section" id="security-posture">
-<div class="section-heading"><span class="section-label">SECURITY POSTURE</span><h2>Final Security Posture</h2></div>
-<p>UIDetect combines the available security checks to determine a final security posture for the assessed website. This provides a summary of the detected security condition and helps the AI recommendation remain consistent with the assessment results.</p>
-<table><tr><th>Field</th><th>Meaning</th></tr>
-<tr><td>Overall Status</td><td>The overall security condition determined from the available assessment results.</td></tr>
-<tr><td>Risk</td><td>The overall level of risk identified from the confirmed findings.</td></tr>
-<tr><td>Highest Severity</td><td>The most serious confirmed security finding in the assessment.</td></tr>
-<tr><td>Confidence</td><td>Indicates how complete the assessment is based on the availability of the security checks.</td></tr>
-<tr><td>Primary Finding</td><td>The main confirmed security finding used to guide the user-facing warning and recommendation.</td></tr>
-</table>
-<div class="info-box">The final security posture is based on the available assessment evidence. An unavailable external security service does not automatically mean that a website is unsafe.</div>
-</div>
-
-<div class="section" id="core-protection">
-<div class="section-heading"><span class="section-label">CORE PROTECTION</span><h2>Core Security Checks</h2></div>
-<h3>HTTPS</h3><p>HTTPS is the secure version of HTTP. It helps protect information sent between your browser and the website by encrypting the connection.</p>
-<h3>Google Safe Browsing</h3><p>Google Safe Browsing checks whether a website is known to be associated with phishing, malware, or other harmful activities.</p>
-<h3>SSL Certificate</h3><p>An SSL certificate helps confirm the identity of a website and enables an encrypted connection between the browser and website.</p>
-<h3>TLS Version</h3><p>TLS is the technology that protects information while it travels between your browser and the website. Newer versions generally provide stronger protection.</p>
-</div>
-
-<div class="section" id="website-security">
-<div class="section-heading"><span class="section-label">WEBSITE SECURITY</span><h2>Security Headers</h2></div>
-<p>Security headers are instructions sent by a website's server to tell the browser how certain security features should behave.</p>
-<table><tr><th>Header</th><th>Simple Explanation</th></tr>
-<tr><td>HSTS</td><td>Helps ensure that the browser uses secure HTTPS connections.</td></tr>
-<tr><td>Content Security Policy</td><td>Helps prevent unauthorized or malicious scripts from running.</td></tr>
-<tr><td>X-Frame-Options</td><td>Helps protect against clickjacking by controlling how the website can appear inside another page.</td></tr>
-<tr><td>X-Content-Type-Options</td><td>Helps prevent the browser from incorrectly interpreting file types.</td></tr>
-<tr><td>Referrer Policy</td><td>Controls how much browsing information is shared with another website.</td></tr>
-</table>
-</div>
-
-<div class="section" id="domain-information">
-<div class="section-heading"><span class="section-label">DOMAIN REPUTATION</span><h2>Domain Information</h2></div>
-<h3>WHOIS Status</h3><p>WHOIS information provides details about the registration history of a domain. UIDetect uses this information to estimate how established a domain appears.</p>
-<h3>Domain Age</h3><p>Domain age shows how long a domain has existed. A very new domain may require additional caution, although a new domain is not automatically malicious.</p>
-<h3>Registrar</h3><p>The registrar is the company responsible for registering and managing the domain name.</p>
-<div class="warning-box">Domain age and registrar information should not be used by themselves to determine whether a website is safe.</div>
-</div>
-
-<div class="section" id="virustotal">
-<div class="section-heading"><span class="section-label">VIRUSTOTAL ANALYSIS</span><h2>VirusTotal Assessment</h2></div>
-<p>VirusTotal provides an additional reputation check by comparing the website against multiple security engines.</p>
-<table><tr><th>Result</th><th>Meaning</th></tr>
-<tr><td><span class="status safe">Safe</span></td><td>No significant malicious or suspicious detections were reported.</td></tr>
-<tr><td><span class="status warning">Warning</span></td><td>Some security engines considered the website suspicious.</td></tr>
-<tr><td><span class="status danger">Unsafe</span></td><td>Malicious activity was detected by security engines.</td></tr>
-<tr><td><span class="status unknown">Unknown</span></td><td>A reliable classification could not be obtained.</td></tr>
-</table>
-<h3>Understanding Detection Counts</h3>
-<p><strong>Malicious:</strong> Number of engines that identified potentially malicious activity.</p>
-<p><strong>Suspicious:</strong> Number of engines that considered the website suspicious.</p>
-<p><strong>Harmless:</strong> Number of engines that did not identify malicious activity.</p>
-<p><strong>Undetected:</strong> Engines that did not detect malicious or suspicious activity.</p>
-<p><strong>Timeout:</strong> Engines that did not return a result within the available scanning time.</p>
-</div>
-
-<div class="section" id="openphish">
-<div class="section-heading"><span class="section-label">PHISHING REPUTATION</span><h2>OpenPhish Assessment</h2></div>
-<p>OpenPhish provides an additional phishing reputation check. UIDetect checks whether the assessed website is listed in the available OpenPhish phishing feed.</p>
-<table><tr><th>Result</th><th>Meaning</th></tr>
-<tr><td><span class="status safe">Not Listed</span></td><td>The website was not found in the available OpenPhish feed.</td></tr>
-<tr><td><span class="status danger">Listed</span></td><td>The website was found in the available OpenPhish phishing feed and should be treated with caution.</td></tr>
-<tr><td>Unavailable</td><td>The OpenPhish check could not provide a result. Review the other UIDetect security indicators.</td></tr>
-</table>
-<div class="warning-box">A website not being listed by OpenPhish does not guarantee that it is safe. OpenPhish is one of several indicators used by UIDetect.</div>
-</div>
-
-<div class="section" id="ai-recommendation">
-<div class="section-heading"><span class="section-label">AI ASSISTANCE</span><h2>AI Recommendation</h2></div>
-<p>UIDetect uses AI to help convert technical security assessment results into a recommendation that ordinary users can understand.</p>
-<div class="info-box">For example, UIDetect may recommend that the user avoid entering sensitive information when several security indicators suggest increased risk.</div>
-<div class="warning-box">AI recommendations are intended as security guidance. They should not be treated as an absolute guarantee that a website is safe or unsafe.</div>
-</div>
-
-<div class="section" id="context">
-<div class="section-heading"><span class="section-label">CONTEXT AWARE SECURITY</span><h2>Interaction Assessment</h2></div>
-<p>UIDetect can assess security-sensitive interactions performed on a website.</p>
-<div class="feature-grid">
-<div class="feature"><h3>Login</h3><p>Assesses risk when entering account credentials.</p></div>
-<div class="feature"><h3>Registration</h3><p>Assesses risk when creating a new account.</p></div>
-<div class="feature"><h3>Upload</h3><p>Assesses risk before uploading files or information.</p></div>
-<div class="feature"><h3>Download</h3><p>Helps identify potential risk when downloading content.</p></div>
-<div class="feature"><h3>Payment</h3><p>Assesses risk when performing payment or checkout-related actions.</p></div>
-</div>
-<h3>Risk Levels</h3>
-<table><tr><th>Risk</th><th>Meaning</th></tr>
-<tr><td><span class="status safe">Very Low / Low</span></td><td>The interaction shows relatively low risk based on the assessment.</td></tr>
-<tr><td><span class="status warning">Medium</span></td><td>The user should review the warning before continuing.</td></tr>
-<tr><td><span class="status danger">High / Critical</span></td><td>The interaction may present a significant security concern.</td></tr>
-</table>
-<div class="danger-box">When UIDetect presents a high or critical warning, carefully consider whether you should continue with the interaction.</div>
-</div>
-
-<div class="section" id="right-click">
-<div class="section-heading"><span class="section-label">PRE-VISIT ASSESSMENT</span><h2>Right-Click Website Scan</h2></div>
-<p>The right-click scan allows users to assess a website link before opening it.</p>
-<ol class="numbered"><li>Find a website link.</li><li>Right-click the link.</li><li>Select the UIDetect scan option.</li><li>UIDetect performs the website assessment.</li><li>Review the security result.</li><li>Decide whether you want to continue to the website.</li></ol>
-<div class="info-box">This feature is useful when a user receives an unfamiliar link and wants to assess it before visiting the website.</div>
-</div>
+<!-- USING UIDETECT -->
 
 <div class="section" id="using-uidetect">
-<div class="section-heading"><span class="section-label">USING UIDETECT</span><h2>How to Scan a Website</h2></div>
+<div class="section-heading">
+<span class="section-label">USING UIDETECT</span>
+<h2>How to Scan a Website</h2>
+</div>
+
 <ol class="numbered">
+<li>Make sure the UIDetect Launcher is running.</li>
 <li>Open Google Chrome.</li>
 <li>Navigate to the website you want to assess.</li>
 <li>Click the UIDetect extension icon.</li>
 <li>Click the <strong>Scan Website</strong> button.</li>
-<li>Wait for the assessment to complete. If necessary, use the <strong>Cancel Scan</strong> button to stop the running assessment.</li>
+<li>Wait for the assessment to complete.</li>
+<li>If necessary, use the <strong>Cancel Scan</strong> button to stop the running assessment.</li>
 <li>Review the Security Score.</li>
 <li>Review the Core Protection checks.</li>
 <li>Review Website Security and its security headers.</li>
@@ -300,82 +615,468 @@ footer{margin-top:20px;padding:20px;text-align:center;color:#90A4AE;font-size:10
 <li>Read the AI recommendation.</li>
 <li>Consider the result before entering sensitive information.</li>
 </ol>
-</div>
 
-<div class="section" id="indicator-interpretation">
-<div class="section-heading"><span class="section-label">RESULT INTERPRETATION</span><h2>Understanding UIDetect Indicators</h2></div>
-<p>UIDetect uses simple visual indicators to make technical security information easier to understand.</p>
-<p><span class="status safe">Safe / Good</span> indicates a generally positive security result.</p>
-<p><span class="status warning">Warning / Moderate</span> indicates that additional caution may be appropriate.</p>
-<p><span class="status danger">Unsafe / Poor</span> indicates that potentially serious security concerns were identified.</p>
-<p><span class="status unknown">Unknown</span> means UIDetect could not obtain enough information for a reliable result.</p>
-<div class="warning-box">A missing security feature does not automatically mean that a website is malicious. Likewise, a website with a good security score can still contain scams, fake information, or compromised content.</div>
-</div>
-
-<div class="section">
-<div class="section-heading"><span class="section-label">USER SAFETY</span><h2>Recommended Security Practices</h2></div>
-<ul class="numbered">
-<li>Check the website address carefully.</li><li>Do not enter passwords into suspicious websites.</li><li>Be careful with newly registered domains.</li><li>Do not ignore UIDetect security warnings.</li><li>Avoid downloading unexpected files.</li><li>Do not upload sensitive documents to untrusted websites.</li><li>Remember that HTTPS alone does not prove that a website is legitimate.</li><li>Review multiple UIDetect indicators instead of relying on only one result.</li>
-</ul>
-</div>
-
-<div class="section" id="troubleshooting">
-<div class="section-heading"><span class="section-label">TROUBLESHOOTING</span><h2>Common Problems</h2></div>
-<h3>UIDetect cannot scan this page</h3>
-<p>Some Chrome internal pages and unsupported page types cannot be scanned.</p>
-<div class="code-box">Examples:
-chrome://
-edge://
-file://</div>
-
-<h3>Scan Failed</h3>
-<p>First, confirm that UIDetect was started using:</p>
-<div class="code-box">installer\UIDetect_Setup.exe</div>
-<p>Also check that your computer has an active internet connection.</p>
-
-<h3>AI Recommendation is unavailable</h3>
-<p>Check that Ollama is installed, the required qwen2.5 3B model is available, and the UIDetect backend is running.</p>
-<div class="code-box">ollama list</div>
-<p>Confirm that:</p>
-<div class="code-box">qwen2.5:3b</div>
-
-<h3>Scan is taking too long</h3>
-<p>Wait for the security checks and AI assessment to finish. If you do not want to continue the current scan, use the <strong>Cancel Scan</strong> button when it is available. You can start a new scan after cancellation.</p>
-
-<h3>UIDetect does not appear in Chrome</h3>
-<p>Open:</p>
-<div class="code-box">chrome://extensions/</div>
-<p>Enable Developer mode and confirm that the UIDetect extension has been loaded.</p>
-
-<h3>VirusTotal information is unavailable</h3>
-<p>External security services may occasionally be unavailable or may not return a result. Review the other UIDetect security indicators while the service is unavailable.</p>
-
-<h3>Backend is not running</h3>
-<p>Run the UIDetect installer again:</p>
-<div class="code-box">installer\UIDetect_Setup.exe</div>
-<p>The installer performs the required setup process and starts the UIDetect backend.</p>
-<div class="warning-box">Do not manually run the batch files during normal installation unless manual troubleshooting or recovery is required.</div>
-</div>
-
-<div class="section" id="checklist">
-<div class="section-heading"><span class="section-label">FINAL CHECK</span><h2>UIDetect Ready Checklist</h2></div>
-<div class="quick-start">
-<div class="quick-step"><span class="quick-number">✓</span><h3>Installer</h3><p>UIDetect_Setup.exe has been run successfully.</p></div>
-<div class="quick-step"><span class="quick-number">✓</span><h3>Python</h3><p>Python is installed and available.</p></div>
-<div class="quick-step"><span class="quick-number">✓</span><h3>Ollama</h3><p>Ollama is installed and available.</p></div>
-<div class="quick-step"><span class="quick-number">✓</span><h3>AI Model</h3><p>qwen2.5:3b is installed.</p></div>
-<div class="quick-step"><span class="quick-number">✓</span><h3>Backend</h3><p>UIDetect backend is running.</p></div>
-<div class="quick-step"><span class="quick-number">✓</span><h3>Chrome Extension</h3><p>UIDetect is loaded and enabled.</p></div>
-<div class="quick-step"><span class="quick-number">✓</span><h3>Website Scan</h3><p>UIDetect can perform a website assessment.</p></div>
+<div class="info-box">
+The assessment may take some time because UIDetect performs multiple security checks and may communicate with external security services.
 </div>
 </div>
 
-<div class="section" id="security-notice">
-<div class="section-heading"><span class="section-label">IMPORTANT</span><h2>Security Notice</h2></div>
-<div class="danger-box">UIDetect is designed to assist users in understanding website security.<br><br>UIDetect does not guarantee that a website is completely safe or malicious.<br><br>Users should continue to exercise caution when entering passwords, financial information, personal information, or uploading files.</div>
+
+<!-- DASHBOARD -->
+
+<div class="section" id="dashboard">
+<div class="section-heading">
+<span class="section-label">UIDETECT DASHBOARD</span>
+<h2>Understanding the Dashboard</h2>
 </div>
 
-<footer>UIDetect<br>Intelligent Website Security Assessment<br>User Manual — Project Version 1.0<br>Chrome Extension Version — 1.0.0</footer>
+<p>
+The UIDetect dashboard presents the results of the website security assessment in several sections.
+</p>
+
+<div class="feature-grid">
+
+<div class="feature">
+<h3>Current Website</h3>
+<p>Shows the website currently being analyzed and its URL.</p>
 </div>
-</body>
-</html>
+
+<div class="feature">
+<h3>Security Score</h3>
+<p>Provides an overall indication of the website's security condition.</p>
+</div>
+
+<div class="feature">
+<h3>Core Protection</h3>
+<p>Checks HTTPS, SSL Certificate, TLS and Google Safe Browsing.</p>
+</div>
+
+<div class="feature">
+<h3>Website Security</h3>
+<p>Checks important browser and server security protections.</p>
+</div>
+
+<div class="feature">
+<h3>Domain Information</h3>
+<p>Provides WHOIS status, domain age and registrar information.</p>
+</div>
+
+<div class="feature">
+<h3>VirusTotal Analysis</h3>
+<p>Uses VirusTotal results as an additional website reputation indicator.</p>
+</div>
+
+<div class="feature">
+<h3>OpenPhish Assessment</h3>
+<p>Provides an additional phishing reputation indicator.</p>
+</div>
+
+<div class="feature">
+<h3>AI Recommendation</h3>
+<p>Converts technical security results into an easier-to-understand recommendation.</p>
+</div>
+
+<div class="feature">
+<h3>Context Assessment</h3>
+<p>Assesses security-sensitive actions such as login, upload and payment.</p>
+</div>
+
+</div>
+</div>
+
+
+<!-- SECURITY SCORE -->
+
+<div class="section" id="results">
+<div class="section-heading">
+<span class="section-label">UNDERSTANDING RESULTS</span>
+<h2>Security Score</h2>
+</div>
+
+<p>
+UIDetect combines multiple security indicators to produce an overall security score.
+</p>
+
+<table>
+<tr>
+<th>Security Level</th>
+<th>Score</th>
+<th>Meaning</th>
+</tr>
+
+<tr>
+<td><span class="status safe">Excellent</span></td>
+<td>90–100</td>
+<td>Strong security indicators were detected.</td>
+</tr>
+
+<tr>
+<td><span class="status safe">Good</span></td>
+<td>70–89</td>
+<td>The website generally shows good security protection.</td>
+</tr>
+
+<tr>
+<td><span class="status warning">Moderate</span></td>
+<td>50–69</td>
+<td>Some security weaknesses were detected.</td>
+</tr>
+
+<tr>
+<td><span class="status danger">Poor</span></td>
+<td>0–49</td>
+<td>Significant security weaknesses may exist.</td>
+</tr>
+</table>
+
+<div class="warning-box">
+A high security score does not guarantee that a website is completely safe.
+Users should consider the other security indicators before providing sensitive information.
+</div>
+</div>
+
+
+<!-- SECURITY POSTURE -->
+
+<div class="section" id="security-posture">
+<div class="section-heading">
+<span class="section-label">SECURITY POSTURE</span>
+<h2>Final Security Posture</h2>
+</div>
+
+<p>
+UIDetect combines the available security checks to determine a final security posture for the assessed website.
+This provides a summary of the detected security condition and helps the AI recommendation remain consistent with the assessment results.
+</p>
+
+<table>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+
+<tr>
+<td>Overall Status</td>
+<td>The overall security condition determined from the available assessment results.</td>
+</tr>
+
+<tr>
+<td>Risk</td>
+<td>The overall level of risk identified from the confirmed findings.</td>
+</tr>
+
+<tr>
+<td>Highest Severity</td>
+<td>The most serious confirmed security finding in the assessment.</td>
+</tr>
+
+<tr>
+<td>Confidence</td>
+<td>Indicates how complete the assessment is based on the availability of the security checks.</td>
+</tr>
+
+<tr>
+<td>Primary Finding</td>
+<td>The main confirmed security finding used to guide the user-facing warning and recommendation.</td>
+</tr>
+</table>
+
+<div class="info-box">
+The final security posture is based on the available assessment evidence.
+An unavailable external security service does not automatically mean that a website is unsafe.
+</div>
+</div>
+
+
+<!-- CORE PROTECTION -->
+
+<div class="section" id="core-protection">
+<div class="section-heading">
+<span class="section-label">CORE PROTECTION</span>
+<h2>Core Security Checks</h2>
+</div>
+
+<h3>HTTPS</h3>
+<p>
+HTTPS is the secure version of HTTP.
+It helps protect information sent between your browser and the website by encrypting the connection.
+</p>
+
+<h3>Google Safe Browsing</h3>
+<p>
+Google Safe Browsing checks whether a website is known to be associated with phishing, malware, or other harmful activities.
+</p>
+
+<h3>SSL Certificate</h3>
+<p>
+An SSL certificate helps confirm the identity of a website and enables an encrypted connection between the browser and website.
+</p>
+
+<h3>TLS Version</h3>
+<p>
+TLS is the technology that protects information while it travels between your browser and the website.
+Newer versions generally provide stronger protection.
+</p>
+</div>
+
+
+<!-- SECURITY HEADERS -->
+
+<div class="section" id="website-security">
+<div class="section-heading">
+<span class="section-label">WEBSITE SECURITY</span>
+<h2>Security Headers</h2>
+</div>
+
+<p>
+Security headers are instructions sent by a website's server to tell the browser how certain security features should behave.
+</p>
+
+<table>
+<tr>
+<th>Header</th>
+<th>Simple Explanation</th>
+</tr>
+
+<tr>
+<td>HSTS</td>
+<td>Helps ensure that the browser uses secure HTTPS connections.</td>
+</tr>
+
+<tr>
+<td>Content Security Policy</td>
+<td>Helps prevent unauthorized or malicious scripts from running.</td>
+</tr>
+
+<tr>
+<td>X-Frame-Options</td>
+<td>Helps protect against clickjacking by controlling how the website can appear inside another page.</td>
+</tr>
+
+<tr>
+<td>X-Content-Type-Options</td>
+<td>Helps prevent the browser from incorrectly interpreting file types.</td>
+</tr>
+
+<tr>
+<td>Referrer Policy</td>
+<td>Controls how much browsing information is shared with another website.</td>
+</tr>
+</table>
+</div>
+
+
+<!-- DOMAIN -->
+
+<div class="section" id="domain-information">
+<div class="section-heading">
+<span class="section-label">DOMAIN REPUTATION</span>
+<h2>Domain Information</h2>
+</div>
+
+<h3>WHOIS Status</h3>
+<p>
+WHOIS information provides details about the registration history of a domain.
+UIDetect uses this information to estimate how established a domain appears.
+</p>
+
+<h3>Domain Age</h3>
+<p>
+Domain age shows how long a domain has existed.
+A very new domain may require additional caution, although a new domain is not automatically malicious.
+</p>
+
+<h3>Registrar</h3>
+<p>
+The registrar is the company responsible for registering and managing the domain name.
+</p>
+
+<div class="warning-box">
+Domain age and registrar information should not be used by themselves to determine whether a website is safe.
+</div>
+</div>
+
+
+<!-- ========================================================= -->
+
+<!-- UPDATE QUICK NAVIGATION -->
+
+<!-- ========================================================= -->
+
+<div class="navigation"> <h2>Quick Navigation</h2>
+
+<a href="#startup">Start Here</a>
+<a href="#quick-start">Quick Start</a>
+<a href="#requirements">Requirements</a>
+<a href="#setup">Setup</a>
+<a href="#python">Python</a>
+<a href="#ollama">Ollama</a>
+<a href="#backend">Backend</a>
+<a href="#extension">Chrome Extension</a>
+<a href="#using-uidetect">Using UIDetect</a>
+<a href="#dashboard">Dashboard</a>
+<a href="#security-posture">Security Posture</a>
+<a href="#core-protection">Core Checks</a>
+<a href="#website-security">Security Headers</a>
+<a href="#domain-information">Domain Information</a>
+
+<a href="#user-safety">User Safety</a>
+<a href="#context">Interaction Assessment</a>
+<a href="#right-click">Right-Click Scan</a>
+
+<a href="#openphish">OpenPhish</a>
+<a href="#virustotal">VirusTotal</a>
+<a href="#ai-recommendation">AI Recommendation</a>
+<a href="#indicator-interpretation">Result Interpretation</a>
+<a href="#results">Understanding Results</a>
+<a href="#troubleshooting">Troubleshooting</a>
+<a href="#checklist">Ready Checklist</a>
+<a href="#security-notice">Security Notice</a>
+
+</div>
+
+<!-- ========================================================= -->
+
+<!-- USER SAFETY -->
+
+<!-- ========================================================= -->
+
+<div class="section" id="user-safety"> <div class="section-heading"> <span class="section-label">USER SAFETY</span> <h2>Recommended Security Practices</h2> </div>
+
+<p> UIDetect provides security information to help users make safer decisions when visiting and interacting with websites. Users should also follow basic security practices. </p>
+
+<ul class="numbered"> <li>Check the website address carefully before continuing.</li> <li>Do not enter passwords into suspicious websites.</li> <li>Be careful when visiting newly registered domains.</li> <li>Do not ignore UIDetect security warnings.</li> <li>Avoid downloading unexpected or suspicious files.</li> <li>Do not upload sensitive documents to untrusted websites.</li> <li>Remember that HTTPS alone does not prove that a website is legitimate.</li> <li>Review multiple UIDetect security indicators instead of relying on only one result.</li> </ul>
+
+<div class="warning-box"> <strong>Important:</strong><br><br> UIDetect is a website security assessment tool. Its results provide security indicators and warnings, but they do not guarantee that a website is completely safe. </div> </div>
+
+<!-- ========================================================= -->
+
+<!-- INTERACTION ASSESSMENT -->
+
+<!-- ========================================================= -->
+
+<div class="section" id="context"> <div class="section-heading"> <span class="section-label">INTERACTION ASSESSMENT</span> <h2>Security-Sensitive Interactions</h2> </div>
+
+<p> UIDetect can assess security-sensitive interactions performed on a website. These assessments provide additional warnings before users perform actions that may involve accounts, files, information or payments. </p>
+
+<h3>Login</h3> <p> Assesses potential risk when entering account credentials. </p>
+
+<h3>Registration</h3> <p> Assesses potential risk when creating a new account or providing registration information. </p>
+
+<h3>Upload</h3> <p> Assesses potential risk before uploading files or information to a website. </p>
+
+<h3>Download</h3> <p> Helps identify potential risk when downloading files or other content. </p>
+
+<h3>Payment</h3> <p> Assesses potential risk when performing payment or checkout-related actions. </p>
+
+<h3>Risk Levels</h3>
+
+<table> <tr> <th>Risk Level</th> <th>Meaning</th> </tr>
+
+<tr> <td><span class="status safe">Very Low / Low</span></td> <td> The interaction shows relatively low risk based on the available assessment. </td> </tr>
+
+<tr> <td><span class="status warning">Medium</span></td> <td> The user should review the warning carefully before continuing. </td> </tr>
+
+<tr> <td><span class="status danger">High / Critical</span></td> <td> The interaction may present a significant security concern. </td> </tr> </table>
+
+<div class="warning-box"> <strong>When a High or Critical warning appears:</strong><br><br> Carefully consider whether you should continue with the interaction. Do not ignore the warning, especially when the action involves passwords, personal information, file uploads or payments. </div>
+
+</div>
+
+<!-- ========================================================= -->
+
+<!-- PRE-VISIT ASSESSMENT -->
+
+<!-- ========================================================= -->
+
+<div class="section" id="right-click"> <div class="section-heading"> <span class="section-label">PRE-VISIT ASSESSMENT</span> <h2>Right-Click Website Scan</h2> </div>
+
+<p> The right-click scan allows users to assess a website link before opening it. </p>
+
+<div class="step-box"> <strong>How to Perform a Right-Click Scan</strong>
+
+<ol class="numbered"> <li>Find a website link.</li> <li>Right-click the link.</li> <li>Select the UIDetect scan option.</li> <li>UIDetect performs the website assessment.</li> <li>Review the security result.</li> <li>Decide whether you want to continue to the website.</li> </ol> </div>
+
+<div class="info-box"> <strong>When to use this feature:</strong><br><br> This feature is useful when you receive an unfamiliar link and want to assess its available security indicators before visiting the website. </div>
+
+<div class="warning-box"> <strong>Important:</strong><br><br> A right-click assessment does not guarantee that a website is safe. Review the assessment results carefully before continuing to the website. </div>
+
+</div>
+
+<!-- ========================================================= -->
+
+<!-- OPENPHISH -->
+
+<!-- ========================================================= -->
+
+<div class="section" id="openphish"> <div class="section-heading"> <span class="section-label">PHISHING REPUTATION</span> <h2>OpenPhish Assessment</h2> </div>
+
+<p> OpenPhish provides an additional phishing reputation check. UIDetect checks whether the assessed website is listed in the available OpenPhish phishing feed. </p>
+
+<table> <tr> <th>Result</th> <th>Meaning</th> </tr>
+
+<tr> <td><span class="status safe">Not Listed</span></td> <td> The website was not found in the available OpenPhish feed. </td> </tr>
+
+<tr> <td><span class="status danger">Listed</span></td> <td> The website was found in the available OpenPhish phishing feed and should be treated with caution. </td> </tr>
+
+<tr> <td><span class="status unknown">Unavailable</span></td> <td> The OpenPhish check could not provide a result. Review the other UIDetect security indicators. </td> </tr> </table>
+
+<div class="warning-box"> A website not being listed by OpenPhish does not guarantee that it is safe. OpenPhish is one of several indicators used by UIDetect. </div>
+
+</div>
+
+<!-- ========================================================= -->
+
+<!-- VIRUSTOTAL — REPLACE THE OLD SECTION COMPLETELY -->
+
+<!-- ========================================================= -->
+
+<div class="section" id="virustotal"> <div class="section-heading"> <span class="section-label">VIRUSTOTAL ANALYSIS</span> <h2>VirusTotal Assessment</h2> </div>
+
+<p> VirusTotal provides an additional reputation check by comparing the assessed website against multiple security engines. </p>
+
+<table> <tr> <th>Result</th> <th>Meaning</th> </tr>
+
+<tr> <td><span class="status safe">Safe</span></td> <td> No significant malicious or suspicious detections were reported by the available security engines. </td> </tr>
+
+<tr> <td><span class="status warning">Warning</span></td> <td> Some security engines considered the website suspicious. </td> </tr>
+
+<tr> <td><span class="status danger">Unsafe</span></td> <td> Malicious activity was detected by security engines. </td> </tr>
+
+<tr> <td><span class="status unknown">Unknown</span></td> <td> A reliable classification could not be obtained. </td> </tr> </table>
+
+<h3>Understanding Detection Counts</h3>
+
+<p> <strong>Malicious:</strong> Number of engines that identified potentially malicious activity. </p>
+
+<p> <strong>Suspicious:</strong> Number of engines that considered the website suspicious. </p>
+
+<p> <strong>Harmless:</strong> Number of engines that did not identify malicious activity. </p>
+
+<p> <strong>Undetected:</strong> Engines that did not detect malicious or suspicious activity. </p>
+
+<p> <strong>Timeout:</strong> Engines that did not return a result within the available scanning time. </p>
+
+<div class="warning-box"> <strong>Important:</strong><br><br> VirusTotal is an additional security indicator. Users should consider the VirusTotal result together with the other UIDetect security assessments before deciding whether to continue. </div>
+
+</div>
+
+<!-- ========================================================= -->
+
+<!-- DASHBOARD — REPLACE ONLY THE VIRUSTOTAL FEATURE -->
+
+<!-- ========================================================= -->
+
+<div class="feature"> <h3>VirusTotal Analysis</h3> <p> Provides an additional website reputation check using multiple security engines when a result is available. </p> </div>
+
+<!-- ========================================================= -->
+
+<!-- USING UIDETECT — REPLACE THE OLD LIST WITH THIS -->
+
+<!-- ========================================================= -->
+
+<div class="section" id="using-uidetect"> <div class="section-heading"> <span class="section-label">USING UIDETECT</span> <h2>How to Scan a Website</h2> </div>
+
+<ol class="numbered"> <li>Make sure the UIDetect Launcher is running.</li> <li>Open Google Chrome.</li> <li>Navigate to the website you want to assess.</li> <li>Click the UIDetect extension icon.</li> <li>Click the <strong>Scan Website</strong> button.</li> <li>Wait for the assessment to complete.</li> <li>If necessary, use the <strong>Cancel Scan</strong> button to stop the running assessment.</li> <li>Review the Security Score.</li> <li>Review the Core Protection checks.</li> <li>Review Website Security and its security headers.</li> <li>Review Domain Information.</li> <li>Review the VirusTotal result when available.</li> <li>Review the OpenPhish reputation result.</li> <li>Review the Final Security Posture, including risk and confidence.</li> <li>Read the AI recommendation.</li> <li>Consider the result before entering sensitive information or performing security-sensitive actions.</li> </ol>
+
+<div class="info-box"> The assessment may take some time because UIDetect performs multiple security checks and may communicate with external security services. Some external checks may be unavailable depending on network connectivity or service availability. </div> </div>
