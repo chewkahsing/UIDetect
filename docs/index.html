@@ -83,58 +83,38 @@ table{display:block;overflow-x:auto}
 <span class="version">UIDetect Project Version 1.0</span>
 </div>
 
-<div class="navigation">
-<h2>Quick Navigation</h2>
-<a href="#startup">Start Here</a>
-<a href="#quick-start">Quick Start</a>
-<a href="#requirements">Requirements</a>
-<a href="#setup">Setup</a>
-<a href="#python">Python</a>
-<a href="#ollama">Ollama</a>
-<a href="#backend">Backend</a>
-<a href="#extension">Chrome Extension</a>
-<a href="#using-uidetect">Using UIDetect</a>
-<a href="#dashboard">Dashboard</a>
-<a href="#security-posture">Security Posture</a>
-<a href="#core-protection">Core Checks</a>
-<a href="#website-security">Security Headers</a>
-<a href="#domain-information">Domain Information</a>
-<a href="#virustotal">VirusTotal</a>
-<a href="#openphish">OpenPhish</a>
-<a href="#ai-recommendation">AI Recommendation</a>
-<a href="#indicator-interpretation">Result Interpretation</a>
-<a href="#right-click">Right-Click Scan</a>
-<a href="#context">Interaction Assessment</a>
-<a href="#results">Understanding Results</a>
-<a href="#troubleshooting">Troubleshooting</a>
-<a href="#checklist">Ready Checklist</a>
-<a href="#security-notice">Security Notice</a>
+<div class="navigation"> <h2>Quick Navigation</h2>
+
+<a href="#start-here">Start Here</a>
+<a href="#intro">Introduction</a>
+<a href="#setup">Installation</a>
+<a href="#detection-methods">Detection Methods</a>
+<a href="#dashboard">Assessment Results</a>
+<a href="#assessment-sources">Assessment Sources</a>
+<a href="#security-information">Security Information</a>
+<a href="#user-safety">User Safety</a>
+
 </div>
+
 
 
 <!-- START HERE -->
 
-<div class="section">
+<div class="section" id="start-here">
 <div class="section-heading">
 <span class="section-label">HOW TO USE THIS MANUAL</span>
 <h2>Start Here</h2>
 </div>
 
-<p>
-For first-time users, follow the sections in order:
-<strong>Start Here → Quick Start → Requirements → UIDetect Setup → Using UIDetect → Understanding Results → Troubleshooting</strong>.
-</p>
+<p> For first-time users, follow the manual in this order: <strong>Start Here → Installation → Using UIDetect → Assessment Results → Security Information → User Safety</strong>. </p>
 
-<div class="info-box">
-The manual follows the normal UIDetect user journey:
-install UIDetect, allow the installer to prepare the required components, start UIDetect, load the Chrome extension, perform an assessment, understand the results, and troubleshoot common problems.
-</div>
+<div class="info-box"> The manual follows the normal UIDetect user journey: install UIDetect, start the application, load the browser extension, perform a security assessment, understand the results, and make safer decisions when interacting with websites. </div>
 </div>
 
 
 <!-- INTRODUCTION -->
 
-<div class="section">
+<div class="section" id="intro">
 <div class="section-heading">
 <span class="section-label">INTRODUCTION</span>
 <h2>What is UIDetect?</h2>
@@ -150,6 +130,47 @@ UIDetect combines multiple security checks and presents the results in a simple 
 
 <div class="info-box">
 UIDetect is a security assessment tool. A positive result does not guarantee that a website is completely safe.
+</div>
+
+<h3>How UIDetect Works, in Four Parts</h3>
+<p>
+This manual is organized around four things UIDetect must clearly declare to every user: how to <strong>install</strong> it, how it <strong>detects</strong> a website or interaction to assess, what an <strong>assessment result</strong> looks like, and which <strong>assessment sources</strong> (external services and local checks) it relies on.
+</p>
+
+<div class="feature-grid">
+
+<div class="feature">
+<h3>1. Installation</h3>
+<p>
+Run <strong>UIDetect_Setup.exe</strong>, which installs Python 3.13.14, Ollama and the <code>qwen2.5:3b</code> AI model, starts the local backend, and guides you through loading the unpacked Chrome extension.
+</p>
+<a href="#setup" class="button">See Installation →</a>
+</div>
+
+<div class="feature">
+<h3>2. Detection Methods</h3>
+<p>
+UIDetect assesses websites in three ways: a manual <strong>Dashboard Scan</strong> of the current tab, a <strong>Right-Click Scan</strong> of a link before opening it, and automatic <strong>Security-Sensitive Interaction Detection</strong> (login, registration, upload, download, payment).
+</p>
+<a href="#detection-methods" class="button">See Detection Methods →</a>
+</div>
+
+<div class="feature">
+<h3>3. Assessment Result</h3>
+<p>
+Every scan returns a numeric <strong>Security Score</strong> and level, a <strong>Final Security Posture</strong> (overall status, risk, highest severity, confidence, primary finding), and a plain-language <strong>AI Recommendation</strong>.
+</p>
+<a href="#dashboard" class="button">See Assessment Results →</a>
+</div>
+
+<div class="feature">
+<h3>4. Assessment Sources</h3>
+<p>
+Results are built from Google Safe Browsing, <strong>VirusTotal</strong>, <strong>OpenPhish</strong>, WHOIS/RDAP domain records, and direct HTTPS/SSL/TLS and HTTP security-header checks performed by the UIDetect backend itself.
+</p>
+<a href="#assessment-sources" class="button">See Assessment Sources →</a>
+</div>
+
 </div>
 </div>
 
@@ -621,6 +642,107 @@ The assessment may take some time because UIDetect performs multiple security ch
 </div>
 </div>
 
+<!-- DETECTION METHODS -->
+
+<div class="section" id="detection-methods">
+<div class="section-heading">
+<span class="section-label">DETECTION METHODS</span>
+<h2>How UIDetect Detects What to Assess</h2>
+</div>
+
+<p>
+UIDetect decides what to scan through three independent detection methods. Each one is handled by a different part of the extension before the URL (and, for interactions, the page context) is sent to the local backend for the full security assessment.
+</p>
+
+<div class="feature-grid">
+
+<div class="feature">
+<h3>Detection Type</h3>
+<p>
+UIDetect provides three main detection methods: Dashboard Scan, Right-Click Scan and Security-Sensitive Interaction Detection.
+</p>
+
+<p>
+<strong>Dashboard Scan:</strong> Performs a security assessment of the current website and displays the results in the UIDetect dashboard.
+</p>
+
+<p>
+<strong>Right-Click Scan:</strong> Allows users to assess a website link before opening it.
+</p>
+
+<p>
+<strong>Security-Sensitive Interaction Detection:</strong> Detects actions such as login, registration, upload, download and payment to provide additional security warnings.
+</p>
+</div>
+
+<div class="feature">
+<h3>Assessment Result Interpretation</h3>
+<p>
+The Dashboard Scan presents the assessment results in several sections. Each section provides a different security indicator that should be considered together.
+</p>
+
+<p>
+<strong>Core Protection:</strong> Shows HTTPS, SSL Certificate, TLS and Google Safe Browsing results.
+</p>
+
+<p>
+<strong>Website Security:</strong> Shows the website's security headers and related browser protections.
+</p>
+
+<p>
+<strong>Domain Information:</strong> Provides WHOIS status, domain age and registrar information.
+</p>
+
+<p>
+<strong>OpenPhish:</strong> Provides an additional phishing reputation check.
+</p>
+
+<p>
+<strong>VirusTotal:</strong> Provides an additional reputation assessment using multiple security engines.
+</p>
+
+<p>
+<strong>Final Security Posture:</strong> Summarises the available security findings, risk, severity, confidence and primary finding.
+</p>
+
+<p>
+<strong>AI Recommendation:</strong> Converts the available security findings into a user-friendly recommendation.
+</p>
+</div>
+
+</div>
+
+<table>
+<tr>
+<th>Detection Method</th>
+<th>How It Is Triggered</th>
+<th>What Is Sent for Assessment</th>
+</tr>
+
+<tr>
+<td>Dashboard Scan</td>
+<td>User clicks <strong>Scan Website</strong> in the extension popup.</td>
+<td>The active tab's URL, page title and meta description.</td>
+</tr>
+
+<tr>
+<td>Right-Click Scan</td>
+<td>User right-clicks a link and selects the UIDetect scan option from the Chrome context menu.</td>
+<td>The target URL of the link, before the linked page is opened.</td>
+</tr>
+
+<tr>
+<td>Security-Sensitive Interaction Detection</td>
+<td>Automatically triggered in the background when the page content indicates a login, registration, upload, download or payment action.</td>
+<td>The current page URL together with the detected interaction type (for example <code>PAYMENT</code> or <code>LOGIN</code>), so the assessment result and AI recommendation can be tailored to that action.</td>
+</tr>
+</table>
+
+<div class="info-box">
+In every detection method, the actual security checks (Safe Browsing, VirusTotal, OpenPhish, WHOIS, HTTPS/SSL/TLS and security headers) are performed by the local UIDetect backend, not inside the browser. The extension only decides <em>when</em> and <em>what</em> to scan.
+</div>
+</div>
+
 
 <!-- DASHBOARD -->
 
@@ -788,12 +910,104 @@ An unavailable external security service does not automatically mean that a webs
 </div>
 
 
+<!-- ========================================================= -->
+
+<!-- ASSESSMENT SOURCES -->
+
+<!-- ========================================================= -->
+
+<div class="section" id="assessment-sources">
+<div class="section-heading">
+<span class="section-label">WHERE THE DATA COMES FROM</span>
+<h2>Assessment Sources</h2>
+</div>
+
+<p>
+Every UIDetect result is built from a fixed set of assessment sources. Some are third-party reputation services queried over the Internet by the UIDetect backend; others are checks the backend performs directly against the website itself. UIDetect does not send your browsing history, passwords or personal data to these sources — only the website URL being assessed is submitted.
+</p>
+
+<table>
+<tr>
+<th>Source</th>
+<th>Type</th>
+<th>What It Provides</th>
+<th>Requires</th>
+</tr>
+
+<tr>
+<td><strong>VirusTotal</strong></td>
+<td>Third-party reputation API</td>
+<td>Aggregated verdicts from dozens of antivirus and URL-scanning engines: malicious, suspicious, harmless, undetected and timeout counts, plus an overall reputation score.</td>
+<td>Internet connection and a configured VirusTotal API key.</td>
+</tr>
+
+<tr>
+<td><strong>Google Safe Browsing</strong></td>
+<td>Third-party reputation API</td>
+<td>Checks whether the website is currently known to Google as a source of phishing, malware or unwanted software.</td>
+<td>Internet connection and a configured Safe Browsing API key.</td>
+</tr>
+
+<tr>
+<td><strong>OpenPhish</strong></td>
+<td>Third-party public phishing feed</td>
+<td>Checks whether the URL appears in the community-maintained OpenPhish public phishing feed.</td>
+<td>Internet connection.</td>
+</tr>
+
+<tr>
+<td><strong>WHOIS / RDAP Domain Records</strong></td>
+<td>Third-party domain registry data</td>
+<td>Registrar, registration date, expiration date, domain age and domain status, used to gauge how established a domain is.</td>
+<td>Internet connection.</td>
+</tr>
+
+<tr>
+<td><strong>HTTPS Check</strong></td>
+<td>Direct check (UIDetect backend)</td>
+<td>Confirms whether the website is served over an encrypted HTTPS connection.</td>
+<td>Internet connection to reach the website.</td>
+</tr>
+
+<tr>
+<td><strong>SSL / TLS Certificate Check</strong></td>
+<td>Direct check (UIDetect backend)</td>
+<td>Validates the website's SSL certificate and identifies the negotiated TLS protocol version.</td>
+<td>Internet connection to reach the website.</td>
+</tr>
+
+<tr>
+<td><strong>HTTP Security Headers</strong></td>
+<td>Direct check (UIDetect backend)</td>
+<td>Inspects the website's response headers for HSTS, Content-Security-Policy, X-Frame-Options, X-Content-Type-Options and Referrer-Policy.</td>
+<td>Internet connection to reach the website.</td>
+</tr>
+
+<tr>
+<td><strong>UIDetect AI (qwen2.5:3b via Ollama)</strong></td>
+<td>Local AI model, not a reputation source</td>
+<td>Does not add new evidence. It converts the results already produced by the sources above into a plain-language "About this Website", warning and recommendation. It cannot report a finding that the other sources did not detect.</td>
+<td>Ollama running locally with the <code>qwen2.5:3b</code> model installed.</td>
+</tr>
+</table>
+
+<div class="info-box">
+<strong>Attribution:</strong> VirusTotal, Google Safe Browsing and OpenPhish are independent third-party services and are not operated by UIDetect. UIDetect only submits the URL being assessed to these services and displays their responses; it does not modify or endorse their verdicts.
+</div>
+
+<div class="warning-box">
+<strong>Source Availability:</strong><br><br>
+If a source cannot be reached — for example, because of a missing API key, a rate limit, or no Internet connection — UIDetect marks that source as <span class="status unknown">Unavailable</span> rather than guessing a result. The <strong>Confidence</strong> field in the Final Security Posture reflects how many sources were actually available for that scan. Always check which sources returned a result before treating a scan as complete.
+</div>
+</div>
+
+
 <!-- CORE PROTECTION -->
 
-<div class="section" id="core-protection">
-<div class="section-heading">
-<span class="section-label">CORE PROTECTION</span>
-<h2>Core Security Checks</h2>
+<div class="section" id="security-information"> 
+    <div class="section-heading"> 
+        <span class="section-label">SECURITY INFORMATION</span> 
+        <h2>Core Security Checks</h2> 
 </div>
 
 <h3>HTTPS</h3>
@@ -897,57 +1111,6 @@ Domain age and registrar information should not be used by themselves to determi
 </div>
 
 
-<!-- ========================================================= -->
-
-<!-- UPDATE QUICK NAVIGATION -->
-
-<!-- ========================================================= -->
-
-<div class="navigation"> <h2>Quick Navigation</h2>
-
-<a href="#startup">Start Here</a>
-<a href="#quick-start">Quick Start</a>
-<a href="#requirements">Requirements</a>
-<a href="#setup">Setup</a>
-<a href="#python">Python</a>
-<a href="#ollama">Ollama</a>
-<a href="#backend">Backend</a>
-<a href="#extension">Chrome Extension</a>
-<a href="#using-uidetect">Using UIDetect</a>
-<a href="#dashboard">Dashboard</a>
-<a href="#security-posture">Security Posture</a>
-<a href="#core-protection">Core Checks</a>
-<a href="#website-security">Security Headers</a>
-<a href="#domain-information">Domain Information</a>
-
-<a href="#user-safety">User Safety</a>
-<a href="#context">Interaction Assessment</a>
-<a href="#right-click">Right-Click Scan</a>
-
-<a href="#openphish">OpenPhish</a>
-<a href="#virustotal">VirusTotal</a>
-<a href="#ai-recommendation">AI Recommendation</a>
-<a href="#indicator-interpretation">Result Interpretation</a>
-<a href="#results">Understanding Results</a>
-<a href="#troubleshooting">Troubleshooting</a>
-<a href="#checklist">Ready Checklist</a>
-<a href="#security-notice">Security Notice</a>
-
-</div>
-
-<!-- ========================================================= -->
-
-<!-- USER SAFETY -->
-
-<!-- ========================================================= -->
-
-<div class="section" id="user-safety"> <div class="section-heading"> <span class="section-label">USER SAFETY</span> <h2>Recommended Security Practices</h2> </div>
-
-<p> UIDetect provides security information to help users make safer decisions when visiting and interacting with websites. Users should also follow basic security practices. </p>
-
-<ul class="numbered"> <li>Check the website address carefully before continuing.</li> <li>Do not enter passwords into suspicious websites.</li> <li>Be careful when visiting newly registered domains.</li> <li>Do not ignore UIDetect security warnings.</li> <li>Avoid downloading unexpected or suspicious files.</li> <li>Do not upload sensitive documents to untrusted websites.</li> <li>Remember that HTTPS alone does not prove that a website is legitimate.</li> <li>Review multiple UIDetect security indicators instead of relying on only one result.</li> </ul>
-
-<div class="warning-box"> <strong>Important:</strong><br><br> UIDetect is a website security assessment tool. Its results provide security indicators and warnings, but they do not guarantee that a website is completely safe. </div> </div>
 
 <!-- ========================================================= -->
 
@@ -1061,22 +1224,26 @@ Domain age and registrar information should not be used by themselves to determi
 
 </div>
 
-<!-- ========================================================= -->
-
-<!-- DASHBOARD — REPLACE ONLY THE VIRUSTOTAL FEATURE -->
 
 <!-- ========================================================= -->
 
-<div class="feature"> <h3>VirusTotal Analysis</h3> <p> Provides an additional website reputation check using multiple security engines when a result is available. </p> </div>
+<!-- USER SAFETY -->
 
 <!-- ========================================================= -->
 
-<!-- USING UIDETECT — REPLACE THE OLD LIST WITH THIS -->
+<div class="section" id="user-safety"> <div class="section-heading"> <span class="section-label">USER SAFETY</span> <h2>Recommended Security Practices</h2> </div>
 
-<!-- ========================================================= -->
+<p> UIDetect provides security information to help users make safer decisions when visiting and interacting with websites. Users should also follow basic security practices. </p>
 
-<div class="section" id="using-uidetect"> <div class="section-heading"> <span class="section-label">USING UIDETECT</span> <h2>How to Scan a Website</h2> </div>
+<ul class="numbered"> <li>Check the website address carefully before continuing.</li> <li>Do not enter passwords into suspicious websites.</li> <li>Be careful when visiting newly registered domains.</li> <li>Do not ignore UIDetect security warnings.</li> <li>Avoid downloading unexpected or suspicious files.</li> <li>Do not upload sensitive documents to untrusted websites.</li> <li>Remember that HTTPS alone does not prove that a website is legitimate.</li> <li>Review multiple UIDetect security indicators instead of relying on only one result.</li> </ul>
 
-<ol class="numbered"> <li>Make sure the UIDetect Launcher is running.</li> <li>Open Google Chrome.</li> <li>Navigate to the website you want to assess.</li> <li>Click the UIDetect extension icon.</li> <li>Click the <strong>Scan Website</strong> button.</li> <li>Wait for the assessment to complete.</li> <li>If necessary, use the <strong>Cancel Scan</strong> button to stop the running assessment.</li> <li>Review the Security Score.</li> <li>Review the Core Protection checks.</li> <li>Review Website Security and its security headers.</li> <li>Review Domain Information.</li> <li>Review the VirusTotal result when available.</li> <li>Review the OpenPhish reputation result.</li> <li>Review the Final Security Posture, including risk and confidence.</li> <li>Read the AI recommendation.</li> <li>Consider the result before entering sensitive information or performing security-sensitive actions.</li> </ol>
+<div class="warning-box"> <strong>Important:</strong><br><br> UIDetect is a website security assessment tool. Its results provide security indicators and warnings, but they do not guarantee that a website is completely safe. </div> </div>
 
-<div class="info-box"> The assessment may take some time because UIDetect performs multiple security checks and may communicate with external security services. Some external checks may be unavailable depending on network connectivity or service availability. </div> </div>
+<footer>
+UIDetect — Intelligent Website Security Assessment.<br>
+Assessment results combine VirusTotal, Google Safe Browsing, OpenPhish, WHOIS/RDAP and direct HTTPS/SSL/TLS/header checks. See <a href="#assessment-sources">Assessment Sources</a> for details.
+</footer>
+
+</div>
+</body>
+</html>
