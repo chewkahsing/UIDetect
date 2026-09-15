@@ -86,8 +86,8 @@ table{display:block;overflow-x:auto}
 <div class="navigation"> <h2>Quick Navigation</h2>
 
 <a href="#start-here">Start Here</a>
+<a href="#setup">UIDetect Setup</a>
 <a href="#intro">Introduction</a>
-<a href="#setup">Installation</a>
 <a href="#detection-methods">Detection Methods</a>
 <a href="#dashboard">Assessment Results</a>
 <a href="#assessment-sources">Assessment Sources</a>
@@ -224,71 +224,6 @@ These files are used by the UIDetect installation and startup process.
 </div>
 
 
-<!-- QUICK START -->
-
-<div class="section" id="quick-start">
-<div class="section-heading">
-<span class="section-label">QUICK START</span>
-<h2>Get UIDetect Running</h2>
-</div>
-
-<p>
-Run the UIDetect installer and wait for the installation process to complete.
-</p>
-
-<div class="quick-start">
-
-<div class="quick-step">
-<span class="quick-number">1</span>
-<h3>Run Installer</h3>
-<p>Run <strong>UIDetect_Setup.exe</strong> to begin the installation.</p>
-</div>
-
-<div class="quick-step">
-<span class="quick-number">2</span>
-<h3>Install Components</h3>
-<p>The installer checks and installs the required Python version and Ollama when necessary.</p>
-</div>
-
-<div class="quick-step">
-<span class="quick-number">3</span>
-<h3>Install AI Model</h3>
-<p>The installer checks for <code>qwen2.5:3b</code> and downloads it automatically if it is missing.</p>
-</div>
-
-<div class="quick-step">
-<span class="quick-number">4</span>
-<h3>Start UIDetect</h3>
-<p>Launch UIDetect and keep the UIDetect Launcher running while using the extension.</p>
-</div>
-
-<div class="quick-step">
-<span class="quick-number">5</span>
-<h3>Load Extension</h3>
-<p>Use <strong>Open Chrome</strong> in the launcher and load UIDetect using Developer Mode.</p>
-</div>
-
-<div class="quick-step">
-<span class="quick-number">6</span>
-<h3>Scan Website</h3>
-<p>Open a website and use UIDetect to perform a security assessment.</p>
-</div>
-
-</div>
-
-<div class="info-box">
-<strong>UIDetect AI Model:</strong><br>
-UIDetect uses the local <code>qwen2.5:3b</code> model through Ollama for AI-powered security recommendations.
-</div>
-
-<div class="info-box">
-<strong>Installation Progress:</strong><br>
-The installer displays the current installation stage and progress.
-Downloading Python, Ollama or the AI model may take some time depending on the Internet connection and computer performance.
-</div>
-</div>
-
-
 <!-- REQUIREMENTS -->
 
 <div class="section" id="requirements">
@@ -373,7 +308,7 @@ Run <strong>UIDetect_Setup.exe</strong> and follow the installation wizard.
 <div class="step-box">
 <strong>Step 2 — Allow Automatic Component Setup</strong>
 <p>
-The installer checks the required Python version, Ollama, the AI model and UIDetect Python dependencies.
+The installer checks the required Python version, Ollama, the Qwen 2.5 3B AI model and UIDetect Python dependencies.
 Missing components are downloaded and installed automatically.
 </p>
 </div>
@@ -390,21 +325,33 @@ Do not close the installer while the installation is running.
 <strong>Step 4 — Start UIDetect</strong>
 <p>
 After installation is complete, launch UIDetect.
-The UIDetect Launcher starts the local backend automatically.
+The <strong>UIDetect Launcher</strong> starts the local backend automatically.
 </p>
 </div>
 
 <div class="step-box">
-<strong>Step 5 — Load the Chrome Extension</strong>
+<strong>Step 5 — Load the UIDetect Extension into Chrome</strong>
 <p>
-Use the <strong>Open Chrome</strong> button in the UIDetect Launcher and follow the Chrome extension setup instructions.
+In the <strong>UIDetect Launcher</strong>, click <strong>Open Chrome</strong>.
+</p>
+
+<p>
+On the Chrome Extensions page:
+</p>
+
+<ol class="numbered"> <li>Turn on <strong>Developer mode</strong>.</li> <li>Click <strong>Load unpacked</strong>.</li> <li>Select the <strong>UIDetect extension folder</strong> installed on your computer.</li> <li>Confirm that the <strong>UIDetect</strong> extension appears on the Extensions page.</li> <li>Make sure the UIDetect extension is <strong>enabled</strong>.</li> 
+</ol>
+
+<p>
+The UIDetect extension must be loaded into Chrome before using the website security scanning and interaction detection features.
 </p>
 </div>
 
 <div class="info-box">
-Manual installation of Python, Ollama and the Qwen model is not required during normal UIDetect setup.
+Manual installation of Python, Ollama and the Qwen 2.5 3B model is not required during normal UIDetect setup.
 </div>
 </div>
+
 
 
 <!-- PYTHON -->
