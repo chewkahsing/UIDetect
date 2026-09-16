@@ -79,11 +79,13 @@ chrome://extensions/
 Then:
 
 1. Enable **Developer mode**.
-<img width="850" alt="Enable Developer mode" src="https://github.com/user-attachments/assets/25dcde0e-1cdd-4af5-9b0c-944e63406cf0" />
+<img width="850" alt="Enable Developer mode" src="https://github.com/user-attachments/assets/0825cc24-8b4b-4159-9e4b-455847286f23" />
+
 
 
 2. Click **Load unpacked**.
-<img width="850" alt="Load unpacked button" src="https://github.com/user-attachments/assets/6b776fc6-9cb0-4a43-91ff-598612f3b670" />
+<img width="850" alt="Load unpacked button" src="https://github.com/user-attachments/assets/bec1e00d-b069-4ee3-9037-686d373ebc64" />
+
 
 
 3. Select the UIDetect extension folder containing `manifest.json`.
