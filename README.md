@@ -72,6 +72,7 @@ Open:
 ```text
 chrome://extensions/
 ```
+<img width="673" height="925" alt="image" src="https://github.com/user-attachments/assets/b09bc4c5-5a9b-4b6d-8585-012a3962647d" />
 
 Then:
 
