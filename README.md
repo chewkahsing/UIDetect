@@ -1,4 +1,4 @@
-<img width="1917" height="676" alt="image" src="https://github.com/user-attachments/assets/b04c7cf1-08af-47e8-8feb-2a501b9aa505" /># UIDetect
+# UIDetect
 
 **Intelligent Website Security Assessment**
 
@@ -87,7 +87,7 @@ Then:
 
 
 3. Select the UIDetect extension folder containing `manifest.json`.
-<img width="700" alt="Select UIDetect extension folder" src="https://github.com/user-attachments/assets/a1c77477-4cfe-4710-a616-4b257a1db1f2" />
+<img width="600" alt="Select UIDetect extension folder" src="https://github.com/user-attachments/assets/a1c77477-4cfe-4710-a616-4b257a1db1f2" />
 
 
 4. Make sure UIDetect is enabled.
