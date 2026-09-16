@@ -40,7 +40,7 @@ Download the latest:
 UIDetect_Setup.exe
 ```
 
-from the **GitHub Releases** page.
+from the **GitHub Releases** page. https://github.com/chewkahsing/UIDetect/releases/tag/UIDetect 
 
 ### 2. Run the Installer
 
