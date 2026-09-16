@@ -1,4 +1,4 @@
-# UIDetect
+<img width="1917" height="676" alt="image" src="https://github.com/user-attachments/assets/b04c7cf1-08af-47e8-8feb-2a501b9aa505" /># UIDetect
 
 **Intelligent Website Security Assessment**
 
@@ -72,15 +72,29 @@ Open:
 ```text
 chrome://extensions/
 ```
-<img width="673" height="925" alt="image" src="https://github.com/user-attachments/assets/b09bc4c5-5a9b-4b6d-8585-012a3962647d" />
+<img width="400" alt="How to find Extensions" src="https://github.com/user-attachments/assets/48696d90-3871-47f6-b945-d0a011606d29" />
+
+<img width="700" alt="Chrome Extensions page" src="https://github.com/user-attachments/assets/a8a6d1c8-6382-4936-adf6-1b8dd574d691" />
 
 Then:
 
 1. Enable **Developer mode**.
+<img width="850" alt="Enable Developer mode" src="https://github.com/user-attachments/assets/25dcde0e-1cdd-4af5-9b0c-944e63406cf0" />
+
+
 2. Click **Load unpacked**.
+<img width="850" alt="Load unpacked button" src="https://github.com/user-attachments/assets/6b776fc6-9cb0-4a43-91ff-598612f3b670" />
+
+
 3. Select the UIDetect extension folder containing `manifest.json`.
+<img width="700" alt="Select UIDetect extension folder" src="https://github.com/user-attachments/assets/a1c77477-4cfe-4710-a616-4b257a1db1f2" />
+
+
 4. Make sure UIDetect is enabled.
 5. Pin the extension to the Chrome toolbar if desired.
+<img width="850" alt="UIDetect extension enabled and pinned" src="https://github.com/user-attachments/assets/2113b5d9-e9b8-4996-8218-e1d691a9c2b7" />
+
+
 
 > UIDetect is currently loaded as an unpacked Chrome extension for development and testing.
 
