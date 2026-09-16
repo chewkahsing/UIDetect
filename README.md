@@ -140,9 +140,9 @@ The manual covers:
 - Troubleshooting
 - User Safety
 
-**User Manual:** GitHub Pages
+**User Manual:** GitHub Pages https://github.com/chewkahsing/UIDetect/tree/main# 
 
-**Latest Installer:** GitHub Releases
+**Latest Installer:** GitHub Releases https://github.com/chewkahsing/UIDetect/releases/tag/UIDetect
 
 ---
 
