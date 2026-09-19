@@ -14,27 +14,40 @@ DefaultGroupName=UIDetect
 OutputDir=.
 OutputBaseFilename=UIDetect_Setup
 
+
 Compression=lzma
 SolidCompression=yes
 
 PrivilegesRequired=admin
-
 ArchitecturesInstallIn64BitMode=x64compatible
 
 DisableDirPage=no
 DisableProgramGroupPage=no
 
+; UIDetect installer icon
+; Make sure UIDetect.ico exists inside the installer folder.
+SetupIconFile=UIDetect.ico
+
 
 [Files]
 
 ; ==========================================================
-; Include Entire UIDetect Project
+; Include UIDetect Runtime Files
 ; ==========================================================
 
 Source: "..\*"; \
     DestDir: "{app}"; \
     Flags: recursesubdirs createallsubdirs ignoreversion; \
-    Excludes: "installer\*;.env;.git\*;__pycache__\*"
+    Excludes: "installer\UIDetect_Setup.exe;installer\*.tmp;installer\UIDetect_Setup.iss;installer\UIDetect.ico;.env;.git\*;.gitignore;__pycache__\*;backend\logs\*;backend_startup.log;UIDetect_Launcher.c;unins000.exe;unins000.dat"
+
+
+; ==========================================================
+; UIDetect Shortcut Icon
+; ==========================================================
+
+Source: "UIDetect.ico"; \
+    DestDir: "{app}"; \
+    Flags: ignoreversion
 
 
 [Icons]
@@ -44,8 +57,9 @@ Source: "..\*"; \
 ; ==========================================================
 
 Name: "{group}\UIDetect"; \
-    Filename: "{app}\Start_UIDetect.bat"; \
-    WorkingDir: "{app}"
+    Filename: "{app}\UIDetect.exe"; \
+    WorkingDir: "{app}"; \
+    IconFilename: "{app}\UIDetect.ico"
 
 
 ; ==========================================================
@@ -53,281 +67,52 @@ Name: "{group}\UIDetect"; \
 ; ==========================================================
 
 Name: "{autodesktop}\UIDetect"; \
-    Filename: "{app}\Start_UIDetect.bat"; \
-    WorkingDir: "{app}"
+    Filename: "{app}\UIDetect.exe"; \
+    WorkingDir: "{app}"; \
+    IconFilename: "{app}\UIDetect.ico"
 
 
 [Run]
 
 ; ==========================================================
-; Install UIDetect Python Dependencies
+; Start UIDetect after installation
 ; ==========================================================
 
-Filename: "{app}\Install_UIDetect.bat"; \
-    Parameters: "/INSTALLER"; \
+Filename: "{app}\UIDetect.exe"; \
     WorkingDir: "{app}"; \
-    Flags: waituntilterminated
-
-Filename: "{app}\Start_UIDetect.bat"; \
-    WorkingDir: "{app}"; \
-    Flags: nowait skipifsilent
+    Flags: nowait postinstall unchecked skipifsilent; \
+    Check: ShouldLaunchUIDetect
 
 
 [Code]
 
+function GetTickCount64: Int64;
+external 'GetTickCount64@kernel32.dll stdcall';
+
 var
-  BrowserPage: TWizardPage;
-  InstructionPage: TWizardPage;
+    InstructionPage: TWizardPage;
+    InstructionLabel: TNewMemo;
 
-  ChromeRadio: TNewRadioButton;
-  EdgeRadio: TNewRadioButton;
+    InstallProgressPage: TOutputProgressWizardPage;
 
-  BrowserInfoLabel: TNewStaticText;
-  InstructionLabel: TNewMemo;
+    InstallFinished: Boolean;
+    InstallError: Boolean;
+    
+    ProgressLabel: TNewStaticText;
+    ElapsedLabel: TNewStaticText;
 
-  ChromeInstalled: Boolean;
-  EdgeInstalled: Boolean;
-  
-  NextStepsPage: TWizardPage;
-  NextStepsMemo: TNewMemo;
-
-
-{============================================================}
-{ FORWARD DECLARATIONS                                       }
-{============================================================}
-
-procedure OpenBrowserSetup; forward;
-procedure OpenUIDetectFolder; forward;
-
-
-{============================================================}
-{ BROWSER DETECTION                                          }
-{============================================================}
-
-function GetChromePath(): String;
+    InstallStartTime: Int64;  
+    
+    CancelButton: TNewButton;
+    CancelRequested: Boolean;
+    BackendProcessID: Integer;  
+    
+    
+function ShouldLaunchUIDetect: Boolean;
 begin
 
-  Result := '';
-
-  { Standard Program Files location }
-
-  if FileExists(
-    ExpandConstant('{autopf}\Google\Chrome\Application\chrome.exe')
-  ) then
-  begin
-
     Result :=
-      ExpandConstant(
-        '{autopf}\Google\Chrome\Application\chrome.exe'
-      );
-
-  end
-
-  { User-local installation }
-
-  else
-  if FileExists(
-    ExpandConstant('{localappdata}\Google\Chrome\Application\chrome.exe')
-  ) then
-  begin
-
-    Result :=
-      ExpandConstant(
-        '{localappdata}\Google\Chrome\Application\chrome.exe'
-      );
-
-  end;
-
-end;
-
-
-function GetEdgePath(): String;
-begin
-
-  Result := '';
-
-  { Standard Program Files location }
-
-  if FileExists(
-    ExpandConstant('{autopf}\Microsoft\Edge\Application\msedge.exe')
-  ) then
-  begin
-
-    Result :=
-      ExpandConstant(
-        '{autopf}\Microsoft\Edge\Application\msedge.exe'
-      );
-
-  end
-
-  { Program Files (x86) location }
-
-  else
-  if FileExists(
-    ExpandConstant('{autopf32}\Microsoft\Edge\Application\msedge.exe')
-  ) then
-  begin
-
-    Result :=
-      ExpandConstant(
-        '{autopf32}\Microsoft\Edge\Application\msedge.exe'
-      );
-
-  end
-
-  { User-local installation }
-
-  else
-  if FileExists(
-    ExpandConstant('{localappdata}\Microsoft\Edge\Application\msedge.exe'
-    )
-  ) then
-  begin
-
-    Result :=
-      ExpandConstant(
-        '{localappdata}\Microsoft\Edge\Application\msedge.exe'
-      );
-
-  end;
-
-end;
-
-
-{============================================================}
-{ CREATE BROWSER SELECTION PAGE                              }
-{============================================================}
-
-procedure CreateBrowserPage;
-begin
-
-  {----------------------------------------------------------}
-  { IMPORTANT                                                }
-  { Create this page BEFORE wpReady                          }
-  {----------------------------------------------------------}
-
-  BrowserPage :=
-    CreateCustomPage(
-      wpSelectDir,
-      'UIDetect Browser Setup',
-      'Select the browser where you want to load the UIDetect extension.'
-    );
-
-
-  {----------------------------------------------------------}
-  { Information text                                         }
-  {----------------------------------------------------------}
-
-  BrowserInfoLabel :=
-    TNewStaticText.Create(BrowserPage);
-
-  BrowserInfoLabel.Parent :=
-    BrowserPage.Surface;
-
-  BrowserInfoLabel.Left :=
-    ScaleX(20);
-
-  BrowserInfoLabel.Top :=
-    ScaleY(20);
-
-  BrowserInfoLabel.Width :=
-    BrowserPage.SurfaceWidth - ScaleX(40);
-
-  BrowserInfoLabel.Height :=
-    ScaleY(80);
-
-  BrowserInfoLabel.AutoSize :=
-    False;
-
-  BrowserInfoLabel.Caption :=
-    'UIDetect uses a local unpacked browser extension.' + #13#10 +
-    'Chrome and Microsoft Edge require Developer Mode to load it.' + #13#10 +
-    'Please select the browser you want to use.';
-
-
-  {----------------------------------------------------------}
-  { Chrome                                                   }
-  {----------------------------------------------------------}
-
-  ChromeRadio :=
-    TNewRadioButton.Create(BrowserPage);
-
-  ChromeRadio.Parent :=
-    BrowserPage.Surface;
-
-  ChromeRadio.Left :=
-    ScaleX(30);
-
-  ChromeRadio.Top :=
-    ScaleY(115);
-
-  ChromeRadio.Width :=
-    ScaleX(350);
-
-  ChromeRadio.Height :=
-    ScaleY(25);
-
-  ChromeRadio.Caption :=
-    'Google Chrome';
-
-  ChromeRadio.Enabled :=
-    ChromeInstalled;
-
-  ChromeRadio.Checked :=
-    False;
-
-
-  {----------------------------------------------------------}
-  { Edge                                                     }
-  {----------------------------------------------------------}
-
-  EdgeRadio :=
-    TNewRadioButton.Create(BrowserPage);
-
-  EdgeRadio.Parent :=
-    BrowserPage.Surface;
-
-  EdgeRadio.Left :=
-    ScaleX(30);
-
-  EdgeRadio.Top :=
-    ScaleY(155);
-
-  EdgeRadio.Width :=
-    ScaleX(350);
-
-  EdgeRadio.Height :=
-    ScaleY(25);
-
-  EdgeRadio.Caption :=
-    'Microsoft Edge';
-
-  EdgeRadio.Enabled :=
-    EdgeInstalled;
-
-  EdgeRadio.Checked :=
-    False;
-
-
-  {----------------------------------------------------------}
-  { Automatically select available browser                   }
-  {----------------------------------------------------------}
-
-  if ChromeInstalled then
-  begin
-
-    ChromeRadio.Checked :=
-      True;
-
-  end
-  else
-  if EdgeInstalled then
-  begin
-
-    EdgeRadio.Checked :=
-      True;
-
-  end;
+        not CancelRequested;
 
 end;
 
@@ -339,71 +124,212 @@ end;
 procedure CreateInstructionPage;
 begin
 
-  InstructionPage :=
-    CreateCustomPage(
-      BrowserPage.ID,
-      'UIDetect Extension Setup',
-      'Follow the steps below after the installation is complete.'
+    InstructionPage :=
+        CreateCustomPage(
+            wpSelectDir,
+            'UIDetect Extension Setup',
+            'Follow the steps below after the installation is complete.'
+        );
+
+    InstructionLabel :=
+        TNewMemo.Create(InstructionPage);
+
+    InstructionLabel.Parent :=
+        InstructionPage.Surface;
+
+    InstructionLabel.Left :=
+        ScaleX(20);
+
+    InstructionLabel.Top :=
+        ScaleY(15);
+
+    InstructionLabel.Width :=
+        InstructionPage.SurfaceWidth - ScaleX(40);
+
+    InstructionLabel.Height :=
+        InstructionPage.SurfaceHeight - ScaleY(30);
+
+    InstructionLabel.ReadOnly :=
+        True;
+
+    InstructionLabel.ScrollBars :=
+        ssVertical;
+
+    InstructionLabel.WordWrap :=
+        True;
+
+    InstructionLabel.TabStop :=
+        False;
+
+    InstructionLabel.Text :=
+        'UIDetect uses a local unpacked browser extension.' + #13#10#13#10 +
+
+        'After installation is complete:' + #13#10 +
+        '1. Launch UIDetect using the option on the Finish page.' + #13#10 +
+        '2. In the UIDetect Launcher, click "Open Chrome".' + #13#10 +
+        '3. The Chrome Extensions page will open.' + #13#10 +
+        '4. Turn ON "Developer mode".' + #13#10 +
+        '5. Click "Load unpacked".' + #13#10 +
+        '6. Select the main UIDetect installation folder.' + #13#10#13#10 +
+
+        'IMPORTANT:' + #13#10 +
+        'Choose the main UIDetect installation folder.' + #13#10 +
+        'Do not select any of its subfolders.' + #13#10#13#10 +
+
+        'After loading the extension:' + #13#10 +
+        '- Confirm that UIDetect appears in Chrome.' + #13#10 +
+        '- Keep the UIDetect Launcher running while using the extension.' + #13#10 +
+        '- UIDetect is ready to perform website security assessments.' + #13#10#13#10 +
+
+        'For complete setup instructions, scanning workflow, features and troubleshooting, refer to the UIDetect documentation on GitHub.' + #13#10 +
+        'Open the UIDetect GitHub repository to access the latest user manual and documentation.';
+
+end;
+
+
+procedure CancelInstallClick(Sender: TObject);
+var
+    ResultCode: Integer;
+begin
+
+    if CancelRequested then
+        Exit;
+
+    if MsgBox(
+        'Are you sure you want to cancel the UIDetect installation?' + #13#10#13#10 +
+        'The installation process will be stopped.',
+        mbConfirmation,
+        MB_YESNO
+    ) <> IDYES then
+        Exit;
+
+    CancelRequested := True;
+
+    CancelButton.Enabled := False;
+    CancelButton.Caption := 'Cancelling...';
+
+    InstallProgressPage.SetText(
+        'Cancelling UIDetect installation...',
+        'Stopping the installation process...'
     );
 
+    WizardForm.Update;
 
-  InstructionLabel :=
-    TNewMemo.Create(InstructionPage);
+    if BackendProcessID <> 0 then
+    begin
 
-  InstructionLabel.Parent :=
-    InstructionPage.Surface;
+        Exec(
+            ExpandConstant('{sys}\taskkill.exe'),
+            '/PID ' +
+            IntToStr(BackendProcessID) +
+            ' /T /F',
+            '',
+            SW_HIDE,
+            ewWaitUntilTerminated,
+            ResultCode
+        );
 
-  InstructionLabel.Left :=
-    ScaleX(20);
+        BackendProcessID := 0;
 
-  InstructionLabel.Top :=
-    ScaleY(15);
+    end;
 
-  InstructionLabel.Width :=
-    InstructionPage.SurfaceWidth - ScaleX(40);
+end;
 
-  InstructionLabel.Height :=
-    InstructionPage.SurfaceHeight - ScaleY(30);
 
-  InstructionLabel.ReadOnly :=
-    True;
+{============================================================}
+{ CREATE INSTALLATION PROGRESS PAGE                          }
+{============================================================}
 
-  InstructionLabel.ScrollBars :=
-    ssVertical;
+procedure CreateInstallProgressPage;
+begin
 
-  InstructionLabel.WordWrap :=
-    True;
+    InstallProgressPage :=
+        CreateOutputProgressPage(
+            'Installing UIDetect',
+            'Installing required components...'
+        );
 
-  InstructionLabel.TabStop :=
-    False;
 
-  InstructionLabel.Text :=
-    'UIDetect has been prepared for your browser.' + #13#10#13#10 +
+    {--------------------------------------------------------}
+    { Installation percentage                                }
+    {--------------------------------------------------------}
 
-    'After clicking Finish:' + #13#10 +
-    '1. UIDetect installation will complete.' + #13#10 +
-    '2. Your selected browser extension page will open.' + #13#10 +
-    '3. Your UIDetect installation folder will also open.' + #13#10#13#10 +
+    ProgressLabel :=
+        TNewStaticText.Create(InstallProgressPage);
 
-    'In the browser:' + #13#10 +
-    '4. Turn ON "Developer mode".' + #13#10 +
-    '5. Click "Load unpacked".' + #13#10 +
-    '6. Select the UIDetect installation folder that opens automatically.' + #13#10#13#10 +
+    ProgressLabel.Parent :=
+        InstallProgressPage.Surface;
 
-    'IMPORTANT:' + #13#10 +
-    'Select the main UIDetect folder.' + #13#10 +
-    'Do NOT select backend, popup, scripts, content, or icons.' + #13#10#13#10 +
+    ProgressLabel.Left :=
+        ScaleX(20);
 
-    'The selected folder must contain:' + #13#10 +
-    'manifest.json' + #13#10 +
-    'icons\icon16.png' + #13#10 +
-    'icons\icon48.png' + #13#10 +
-    'icons\icon128.png' + #13#10#13#10 +
+    ProgressLabel.Top :=
+        ScaleY(125);
 
-    'Installation location:' + #13#10 +
-    'The UIDetect installation folder will be opened automatically after installation.' + #13#10#13#10 +
+    ProgressLabel.Width :=
+        InstallProgressPage.SurfaceWidth - ScaleX(40);
 
-    'After the extension appears in the browser, UIDetect is ready to use.';
+    ProgressLabel.Height :=
+        ScaleY(20);
+
+    ProgressLabel.Caption :=
+        'Progress: 0%';
+
+
+
+
+    {--------------------------------------------------------}
+    { Elapsed time                                            }
+    {--------------------------------------------------------}
+
+    ElapsedLabel :=
+        TNewStaticText.Create(InstallProgressPage);
+
+    ElapsedLabel.Parent :=
+        InstallProgressPage.Surface;
+
+    ElapsedLabel.Left :=
+        ScaleX(20);
+
+    ElapsedLabel.Top :=
+        ScaleY(150);
+
+    ElapsedLabel.Width :=
+        InstallProgressPage.SurfaceWidth - ScaleX(40);
+
+    ElapsedLabel.Height :=
+        ScaleY(20);
+
+    ElapsedLabel.Caption :=
+        'Elapsed time: 00:00:00';
+
+    {--------------------------------------------------------}
+    { Cancel installation button                             }
+    {--------------------------------------------------------}
+
+    CancelButton :=
+        TNewButton.Create(InstallProgressPage);
+
+    CancelButton.Parent :=
+        InstallProgressPage.Surface;
+
+    CancelButton.Left :=
+        InstallProgressPage.SurfaceWidth - ScaleX(120);
+
+    CancelButton.Top :=
+        ScaleY(205);
+
+    CancelButton.Width :=
+        ScaleX(100);
+
+    CancelButton.Height :=
+        ScaleY(25);
+
+    CancelButton.Caption :=
+        'Cancel Installation';
+
+    CancelButton.OnClick :=
+        @CancelInstallClick;
 
 end;
 
@@ -415,237 +341,677 @@ end;
 procedure InitializeWizard;
 begin
 
-  {----------------------------------------------------------}
-  { Detect browsers                                         }
-  {----------------------------------------------------------}
+    InstallFinished := False;
+    InstallError := False;
 
-  ChromeInstalled :=
-    GetChromePath() <> '';
+    CancelRequested := False;
+    BackendProcessID := 0;
 
-  EdgeInstalled :=
-    GetEdgePath() <> '';
+    CreateInstructionPage;
+    CreateInstallProgressPage;
+
+end;
 
 
-  {----------------------------------------------------------}
-  { Create custom pages BEFORE wpReady                       }
-  {----------------------------------------------------------}
+{============================================================}
+{ GET STATUS FILE                                            }
+{============================================================}
 
-  CreateBrowserPage;
+function GetStatusFile: String;
+begin
 
-  CreateInstructionPage;
+    Result :=
+        AddBackslash(GetEnv('TEMP')) +
+        'UIDetectInstaller\install_status.txt';
+
+end;
+
+
+{============================================================}
+{ READ INSTALLATION STATUS                                   }
+{============================================================}
+
+function ReadInstallStatus(
+    var ProgressValue: Integer;
+    var StatusText: String
+): Boolean;
+var
+    StatusFile: String;
+    Lines: TArrayOfString;
+    Line: String;
+    SeparatorPosition: Integer;
+    NumberText: String;
+begin
+
+    Result := False;
+
+    ProgressValue := 0;
+
+    StatusText :=
+        'Waiting for installation status...';
+
+    StatusFile :=
+        GetStatusFile;
+
+    if not FileExists(StatusFile) then
+        Exit;
+
+    try
+
+        if not LoadStringsFromFile(
+            StatusFile,
+            Lines
+        ) then
+            Exit;
+
+    except
+
+        Exit;
+
+    end;
+
+    if GetArrayLength(Lines) = 0 then
+        Exit;
+
+    Line :=
+        Lines[
+            GetArrayLength(Lines) - 1
+        ];
+
+    SeparatorPosition :=
+        Pos('|', Line);
+
+    if SeparatorPosition <= 0 then
+        Exit;
+
+    NumberText :=
+        Copy(
+            Line,
+            1,
+            SeparatorPosition - 1
+        );
+
+    StatusText :=
+        Copy(
+            Line,
+            SeparatorPosition + 1,
+            Length(Line)
+        );
+
+    ProgressValue :=
+        StrToIntDef(
+            NumberText,
+            0
+        );
+
+    Result := True;
+
+end;
+
+
+{============================================================}
+{ FORMAT TIME                                                }
+{============================================================}
+
+function TwoDigit(
+    Value: Cardinal
+): String;
+begin
+
+    if Value < 10 then
+        Result := '0' + IntToStr(Value)
+    else
+        Result := IntToStr(Value);
+
+end;
+
+
+function FormatElapsedTime(
+    Seconds: Cardinal
+): String;
+var
+    Hours: Cardinal;
+    Minutes: Cardinal;
+    RemainingSeconds: Cardinal;
+begin
+
+    Hours :=
+        Seconds div 3600;
+
+    Minutes :=
+        (Seconds mod 3600) div 60;
+
+    RemainingSeconds :=
+        Seconds mod 60;
+
+    Result :=
+        TwoDigit(Hours) +
+        ':' +
+        TwoDigit(Minutes) +
+        ':' +
+        TwoDigit(RemainingSeconds);
+
+end;
+
+
+{============================================================}
+{ UPDATE INSTALLATION TIME INFORMATION                       }
+{============================================================}
+
+procedure UpdateInstallationTime(
+    ProgressValue: Integer
+);
+var
+    ElapsedSeconds: Cardinal;
+begin
+
+    {--------------------------------------------------------}
+    { Calculate actual elapsed time                          }
+    {--------------------------------------------------------}
+
+    ElapsedSeconds :=
+        Cardinal(
+            (GetTickCount64 - InstallStartTime) div 1000
+        );
+
+
+    {--------------------------------------------------------}
+    { Update elapsed time                                    }
+    {--------------------------------------------------------}
+
+    ElapsedLabel.Caption :=
+        'Elapsed time: ' +
+        FormatElapsedTime(
+            ElapsedSeconds
+        );
+
+
+    {--------------------------------------------------------}
+    { Update progress percentage                             }
+    {--------------------------------------------------------}
+
+    ProgressLabel.Caption :=
+        'Progress: ' +
+        IntToStr(ProgressValue) +
+        '%';
+
+end;
+
+{============================================================}
+{ START BACKEND INSTALLATION - DIAGNOSTIC VERSION            }
+{============================================================}
+
+function StartBackendInstallation: Boolean;
+var
+    ResultCode: Integer;
+    BatFile: String;
+    Params: String;
+    DebugFile: String;
+begin
+
+    Result := False;
+
+    BatFile :=
+        ExpandConstant(
+            '{app}\Install_UIDetect.bat'
+        );
+
+    DebugFile :=
+        ExpandConstant(
+            '{tmp}\UIDetectInstaller\frontend_launch_test.txt'
+        );
+
+
+    {--------------------------------------------------------}
+    { Check BAT exists                                       }
+    {--------------------------------------------------------}
+
+    if not FileExists(BatFile) then
+    begin
+
+        Log('ERROR: BAT FILE NOT FOUND.');
+        Log('BAT FILE: ' + BatFile);
+
+        MsgBox(
+            'Install_UIDetect.bat was not found:' + #13#10#13#10 +
+            BatFile,
+            mbError,
+            MB_OK
+        );
+
+        Exit;
+
+    end;
+
+
+    {--------------------------------------------------------}
+    { Create a diagnostic file BEFORE launching CMD          }
+    {--------------------------------------------------------}
+
+    ForceDirectories(
+        ExpandConstant('{tmp}\UIDetectInstaller')
+    );
+
+    SaveStringToFile(
+        DebugFile,
+        'Inno reached StartBackendInstallation.' + #13#10 +
+        'BAT=' + BatFile + #13#10 +
+        'TIME=' + GetDateTimeString('yyyy-mm-dd hh:nn:ss', '-', ':') + #13#10,
+        False
+    );
+
+
+    {--------------------------------------------------------}
+    { IMPORTANT                                              }
+    { Use the standard CMD /C quoted-BAT pattern.           }
+    { Do NOT use CALL for this test.                        }
+    {--------------------------------------------------------}
+
+    Params :=
+        '/D /S /C ""' +
+        BatFile +
+        '" /INSTALLER"';
+
+
+    Log('Starting backend using standard CMD /C pattern.');
+    Log('BAT FILE: ' + BatFile);
+    Log('CMD FILE: ' + ExpandConstant('{sys}\cmd.exe'));
+    Log('CMD PARAMETERS: ' + Params);
+
+
+    {--------------------------------------------------------}
+    { Launch asynchronously                                 }
+    {--------------------------------------------------------}
+
+    if Exec(
+        ExpandConstant('{sys}\cmd.exe'),
+        Params,
+        ExpandConstant('{app}'),
+        SW_HIDE,
+        ewNoWait,
+        ResultCode
+    ) then
+    begin
+
+        BackendProcessID := ResultCode;
+
+        Log(
+            'CMD PROCESS CREATED SUCCESSFULLY.'
+        );
+
+        Log(
+            'CMD PROCESS ID: ' +
+            IntToStr(BackendProcessID)
+        );
+
+        SaveStringToFile(
+            DebugFile,
+            'CMD process created successfully.' + #13#10 +
+            'Process ID=' +
+            IntToStr(BackendProcessID) + #13#10 +
+            'Parameters=' + Params + #13#10 +
+            'TIME=' +
+            GetDateTimeString(
+                'yyyy-mm-dd hh:nn:ss',
+                '-',
+                ':'
+            ) + #13#10,
+            True
+        );
+
+        Result := True;
+
+    end
+    else
+    begin
+
+        Log('ERROR: CMD PROCESS COULD NOT BE CREATED.');
+
+        SaveStringToFile(
+            DebugFile,
+            'ERROR: CMD process could NOT be created.' + #13#10 +
+            'TIME=' + GetDateTimeString('yyyy-mm-dd hh:nn:ss', '-', ':') + #13#10,
+            True
+        );
+
+        MsgBox(
+            'Failed to start UIDetect backend installation.' + #13#10#13#10 +
+            'BAT:' + #13#10 +
+            BatFile,
+            mbError,
+            MB_OK
+        );
+
+    end;
+
+end;
+
+
+{============================================================}
+{ RUN BACKEND INSTALLATION                                   }
+{============================================================}
+
+procedure RunBackendInstallation;
+var
+    ProgressValue: Integer;
+    StatusText: String;
+
+    LastProgressValue: Integer;
+    LastStatusText: String;
+
+    StatusFile: String;
+
+    StatusFound: Boolean;
+begin
+
+    InstallFinished := False;
+    InstallError := False;
+
+    CancelRequested := False;
+    BackendProcessID := 0;
+
+    LastProgressValue := -1;
+    LastStatusText := '';
+
+    StatusFile :=
+        GetStatusFile;
+
+
+    {--------------------------------------------------------}
+    { Remove old status file before starting a new install.  }
+    {--------------------------------------------------------}
+
+    DeleteFile(StatusFile);
+
+
+    {--------------------------------------------------------}
+    { Show frontend progress page.                           }
+    {--------------------------------------------------------}
+
+    InstallProgressPage.Show;
+
+    InstallProgressPage.SetProgress(
+        0,
+        100
+    );
+
+    InstallProgressPage.SetText(
+        'Starting UIDetect backend installation...',
+        'Starting Install_UIDetect.bat...'
+    );
+    
+    InstallStartTime :=
+      GetTickCount64;
+
+    UpdateInstallationTime(0);
   
-    NextStepsPage := CreateCustomPage(
-    InstructionPage.ID,
-    'Important Next Step',
-    'Complete the UIDetect setup before using the extension'
-  );
+    { Force the installer window to repaint. } 
+    
+    WizardForm.Update;
 
-  NextStepsMemo := TNewMemo.Create(WizardForm);
-  NextStepsMemo.Parent := NextStepsPage.Surface;
-  NextStepsMemo.Left := 0;
-  NextStepsMemo.Top := 0;
-  NextStepsMemo.Width := NextStepsPage.SurfaceWidth;
-  NextStepsMemo.Height := NextStepsPage.SurfaceHeight;
-  NextStepsMemo.ReadOnly := True;
-  NextStepsMemo.ScrollBars := ssVertical;
-  NextStepsMemo.WordWrap := True;
+    {--------------------------------------------------------}
+    { Start BAT asynchronously.                              }
+    {--------------------------------------------------------}
 
-    NextStepsMemo.Lines.Add(
-    'IMPORTANT: UIDetect must be manually loaded into the browser before you can use the extension.'
-  );
-
-  NextStepsMemo.Lines.Add('');
-  NextStepsMemo.Lines.Add(
-    'When you click Finish, the browser extension page and UIDetect installation folder will open automatically.'
-  );
-
-  NextStepsMemo.Lines.Add('');
-  NextStepsMemo.Lines.Add(
-    'Then complete these steps:'
-  );
-
-  NextStepsMemo.Lines.Add('');
-
-  NextStepsMemo.Lines.Add(
-    '1. Turn ON "Developer mode" in the browser extension page.'
-  );
-
-  NextStepsMemo.Lines.Add(
-    '2. Click "Load unpacked".'
-  );
-
-  NextStepsMemo.Lines.Add(
-    '3. Select the installed UIDetect folder that opens automatically.'
-  );
-
-  NextStepsMemo.Lines.Add(
-    '4. Confirm that the UIDetect extension appears in the browser.'
-  );
-
-  NextStepsMemo.Lines.Add('');
-
-  NextStepsMemo.Lines.Add(
-    'After loading the extension:'
-  );
-
-  NextStepsMemo.Lines.Add('');
-
-  NextStepsMemo.Lines.Add(
-    '• Start using UIDetect from the browser.'
-  );
-
-  NextStepsMemo.Lines.Add(
-    '• Keep the UIDetect backend running while using the extension.'
-  );
-
-  NextStepsMemo.Lines.Add(
-    '• Read "UIDetect User Manual.html" for the complete setup, scanning workflow, features and troubleshooting steps.'
-  );
-
-  NextStepsMemo.Lines.Add('');
-
-  NextStepsMemo.Lines.Add(
-    'IMPORTANT: Loading the unpacked extension is a required manual step. The installer does not automatically install the extension into Chrome or Microsoft Edge.'
-  );
-
-end;
-
-
-{============================================================}
-{ VALIDATE BROWSER SELECTION                                 }
-{============================================================}
-
-function NextButtonClick(CurPageID: Integer): Boolean;
-begin
-  Result := True;
-
-  {----------------------------------------------------------}
-  { Validate browser selection                               }
-  {----------------------------------------------------------}
-
-  if CurPageID = BrowserPage.ID then
-  begin
-    if (not ChromeRadio.Checked) and
-       (not EdgeRadio.Checked) then
+    if not StartBackendInstallation then
     begin
 
-      MsgBox(
-        'Please select Google Chrome or Microsoft Edge before continuing.',
-        mbError,
-        MB_OK
-      );
+        InstallError := True;
 
-      Result := False;
-      Exit;
+        InstallProgressPage.SetText(
+            'Unable to start backend installation.',
+            'Install_UIDetect.bat could not be started.'
+        );
 
-    end;
-  end;
+        Sleep(1000);
 
+        InstallProgressPage.Hide;
 
-  {----------------------------------------------------------}
-  { Open browser extension page and UIDetect folder          }
-  { after the user clicks Finish                             }
-  {----------------------------------------------------------}
-
-  if CurPageID = wpFinished then
-  begin
-    OpenBrowserSetup;
-    OpenUIDetectFolder;
-  end;
-
-end;
-
-
-{============================================================}
-{ OPEN SELECTED BROWSER                                      }
-{============================================================}
-
-procedure OpenBrowserSetup;
-var
-  BrowserPath: String;
-  ResultCode: Integer;
-begin
-
-  BrowserPath :=
-    '';
-
-
-  {----------------------------------------------------------}
-  { Chrome                                                   }
-  {----------------------------------------------------------}
-
-  if ChromeRadio.Checked then
-  begin
-
-    BrowserPath :=
-      GetChromePath();
-
-    if BrowserPath <> '' then
-    begin
-
-      Exec(
-        BrowserPath,
-        '--new-window "chrome://extensions/"',
-        '',
-        SW_SHOWNORMAL,
-        ewNoWait,
-        ResultCode
-      );
+        Exit;
 
     end;
 
+
+    {--------------------------------------------------------}
+    { Frontend now monitors backend status file.             }
+    {--------------------------------------------------------}
+
+    InstallProgressPage.SetText(
+        'UIDetect backend installation started.',
+        'Waiting for installation progress...'
+    );
+
+    WizardForm.Update;
+
+
+    {--------------------------------------------------------}
+    { POLLING LOOP                                            }
+    {--------------------------------------------------------}
+
+    while True do
+    begin
+
+        if CancelRequested then
+            Break;
+
+        StatusFound :=
+            ReadInstallStatus(
+                ProgressValue,
+                StatusText
+            );
+
+
+        if StatusFound then
+        begin
+
+            {------------------------------------------------}
+            { Update GUI when status changes.                }
+            {------------------------------------------------}
+
+            if (
+                ProgressValue <> LastProgressValue
+            ) or (
+                StatusText <> LastStatusText
+            ) then
+            begin
+
+                InstallProgressPage.SetProgress(
+                    ProgressValue,
+                    100
+                );
+
+                InstallProgressPage.SetText(
+                    StatusText,
+                    'UIDetect backend installation is running...'
+                );
+
+                LastProgressValue :=
+                    ProgressValue;
+
+                LastStatusText :=
+                    StatusText;
+
+                {--------------------------------------------}
+                { IMPORTANT: force GUI repaint               }
+                {--------------------------------------------}
+
+                WizardForm.Update;
+
+            end;
+
+
+            {------------------------------------------------}
+            { ERROR                                           }
+            {------------------------------------------------}
+
+            if Pos(
+                'ERROR:',
+                UpperCase(StatusText)
+            ) > 0 then
+            begin
+
+                InstallError := True;
+
+                WizardForm.Update;
+
+                Break;
+
+            end;
+
+
+            {------------------------------------------------}
+            { SUCCESS                                         }
+            {------------------------------------------------}
+
+            if (
+                ProgressValue >= 100
+            ) and (
+                Pos(
+                    'ERROR:',
+                    UpperCase(StatusText)
+                ) = 0
+            ) then
+            begin
+
+                InstallFinished := True;
+
+                WizardForm.Update;
+
+                Break;
+
+            end;
+
+        end;
+
+
+        {----------------------------------------------------}
+        { IMPORTANT                                           }
+        {----------------------------------------------------}
+        { Allow the Inno Setup GUI to repaint between status  }
+        { checks.                                             }
+        {----------------------------------------------------}
+
+        if StatusFound then
+        begin
+
+            UpdateInstallationTime(
+                ProgressValue
+            );
+
+        end
+        else if LastProgressValue >= 0 then
+        begin
+
+            UpdateInstallationTime(
+                LastProgressValue
+            );
+
+        end
+        else
+        begin
+
+            UpdateInstallationTime(
+                0
+            );
+
+        end;
+
+        WizardForm.Update;
+
+        Sleep(500);
+    end;
+    
+  {--------------------------------------------------------}
+  { Installation cancelled                                }
+  {--------------------------------------------------------}
+
+  if CancelRequested then
+  begin
+
+      InstallError := True;
+
+      InstallProgressPage.SetText(
+          'UIDetect installation cancelled.',
+          'The installation was cancelled by the user.'
+      );
+
+      WizardForm.Update;
+
+      Sleep(1500);
+
+  end
+  else
+  begin
+
+      {----------------------------------------------------}
+      { Installation finished / failed                     }
+      {----------------------------------------------------}
+
+      if InstallFinished then
+      begin
+      
+          CancelButton.Enabled := False;
+
+          InstallProgressPage.SetProgress(
+              100,
+              100
+          );
+
+          InstallProgressPage.SetText(
+              'UIDetect installation completed.',
+              'All required components have been installed successfully.'
+          );
+
+          WizardForm.Update;
+
+          Sleep(1000);
+
+      end
+      else
+      begin
+
+          if InstallError then
+          begin
+
+              InstallProgressPage.SetText(
+                  'UIDetect installation failed.',
+                  'Please check the installation log for details.'
+              );
+
+              WizardForm.Update;
+
+              Sleep(1500);
+
+          end;
+
+      end;
+
   end;
 
 
-  {----------------------------------------------------------}
-  { Edge                                                     }
-  {----------------------------------------------------------}
+    {--------------------------------------------------------}
+    { Hide custom progress page                              }
+    {--------------------------------------------------------}
 
-  if EdgeRadio.Checked then
-  begin
+    InstallProgressPage.Hide;
 
-    BrowserPath :=
-      GetEdgePath();
+end;
 
-    if BrowserPath <> '' then
+
+{============================================================}
+{ AFTER FILE INSTALLATION                                    }
+{============================================================}
+
+procedure CurStepChanged(
+    CurStep: TSetupStep
+);
+begin
+
+    if CurStep = ssPostInstall then
     begin
 
-      Exec(
-        BrowserPath,
-        '--new-window "edge://extensions/"',
-        '',
-        SW_SHOWNORMAL,
-        ewNoWait,
-        ResultCode
-      );
+        RunBackendInstallation;
 
     end;
 
-  end;
-
 end;
-
-
-{============================================================}
-{ OPEN UIDETECT INSTALLATION FOLDER                          }
-{============================================================}
-
-procedure OpenUIDetectFolder;
-var
-  ResultCode: Integer;
-begin
-
-  ShellExec(
-    '',
-    ExpandConstant('{app}'),
-    '',
-    '',
-    SW_SHOWNORMAL,
-    ewNoWait,
-    ResultCode
-  );
-
-end;
-
-
-
