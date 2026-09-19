@@ -333,8 +333,8 @@ function getSecurityStatus(
     if(openphishDetected)
     {
         return {
-            label: "High Risk",
-            icon: "⚠",
+            label: "UIDetect Alert!!!",
+            icon: "🔴",
             className: "risk-critical"
         };
     }
@@ -352,8 +352,8 @@ function getSecurityStatus(
     )
     {
         return {
-            label: "High Risk",
-            icon: "⚠",
+            label: "UIDetect Alert!!!",
+            icon: "🔴",
             className: "risk-high"
         };
     }
@@ -365,9 +365,22 @@ function getSecurityStatus(
     )
     {
         return {
-            label: "Caution",
-            icon: "⚠",
+            label: "Be Cautious",
+            icon: "🟡",
             className: "risk-medium"
+        };
+    }
+
+
+    if(
+        risk.includes("very low") ||
+        risk.includes("very safe")
+    )
+    {
+        return {
+            label: "Very Safe",
+            icon: "🟢",
+            className: "risk-low"
         };
     }
 
@@ -378,16 +391,16 @@ function getSecurityStatus(
     )
     {
         return {
-            label: "Low Risk",
-            icon: "✓",
+            label: "Safe",
+            icon: "🟢",
             className: "risk-low"
         };
     }
 
 
     return {
-        label: "Unknown Risk",
-        icon: "",
+        label: "Security Status Unavailable",
+        icon: "⚪",
         className: "risk-unknown"
     };
 }
@@ -464,26 +477,35 @@ function getDisplayRisk(
 
 
 /* =====================================================
-Detection Type
+   Detection Type
 ===================================================== */
 
-function getDetectionType(data, result)
+function getDetectionType(data, result) 
 {
-    const scanType =
+    const scanType = 
         safeText(
-            data.scanType,
+            data.scanType || result.scanType,
             ""
         ).toLowerCase();
 
-    const interactionType =
+
+    const interactionType = 
         safeText(
-            data.interaction,
+            data.interaction || result.interaction,
             ""
         ).toLowerCase();
 
-    const detectionType =
+
+    const detectionType = 
         safeText(
-            data.detectionType,
+            data.detectionType || result.detectionType,
+            ""
+        ).toLowerCase();
+
+
+    const websiteUrl = 
+        safeText(
+            data.url || result.url,
             ""
         ).toLowerCase();
 
@@ -504,12 +526,11 @@ function getDetectionType(data, result)
 
 
     /* =============================================
-       PRIORITY 2 - Form Detection
+       PRIORITY 2 - Explicit Form Detection
        ============================================= */
 
     if(
         result.formDetected === true ||
-        result.googleFormDetected === true ||
         detectionType.includes("form") ||
         scanType.includes("form") ||
         interactionType.includes("form")
@@ -519,14 +540,18 @@ function getDetectionType(data, result)
     }
 
 
+
     /* =============================================
-       PRIORITY 3 - Right Click Scan
+       PRIORITY 4 - Right Click Scan
        ============================================= */
 
     if(
         scanType.includes("rightclick") ||
         scanType.includes("right_click") ||
-        scanType.includes("right-click")
+        scanType.includes("right-click") ||
+        interactionType.includes("rightclick") ||
+        interactionType.includes("right_click") ||
+        interactionType.includes("right-click")
     )
     {
         return "right-click";
@@ -534,7 +559,51 @@ function getDetectionType(data, result)
 
 
     /* =============================================
-       PRIORITY 4 - Interaction Scan
+       PRIORITY 5 - Specific Interaction Action
+       ============================================= */
+
+    if(
+        interactionType.includes("registration")
+    )
+    {
+        return "registration";
+    }
+
+
+    if(
+        interactionType.includes("upload")
+    )
+    {
+        return "upload";
+    }
+
+
+    if(
+        interactionType.includes("download")
+    )
+    {
+        return "download";
+    }
+
+
+    if(
+        interactionType.includes("payment")
+    )
+    {
+        return "payment";
+    }
+
+
+    if(
+        interactionType.includes("logout")
+    )
+    {
+        return "logout";
+    }
+
+
+    /* =============================================
+       PRIORITY 6 - Interaction Scan
        ============================================= */
 
     if(
@@ -591,19 +660,31 @@ function getFriendlyDetectionType(
     switch(detectionType)
     {
         case "right-click":
-            return "Right-Click Scan";
-
-        case "interaction":
-            return "Interaction Scan";
-
-        case "form":
-            return "Form Detection";
+            return "Right-Click Scan Detected";
 
         case "login":
-            return "Login Detection";
+            return "Login Action Detected";
+
+        case "registration":
+            return "Registration Action Detected";
+
+        case "upload":
+            return "Upload Action Detected";
+
+        case "download":
+            return "Download Action Detected";
+
+        case "payment":
+            return "Payment Action Detected";
+
+        case "logout":
+            return "Logout Action Detected";
+
+        case "interaction":
+            return "Security-Sensitive Action Detected";
 
         default:
-            return "Website Scan";
+            return "Website Scan Detected";
     }
 }
 
@@ -979,9 +1060,10 @@ function showBackendUnavailablePopup()
 
 
                         <p>
-                            UIDetect could not connect
-                            to the security assessment
-                            backend.
+                            UIDetect cannot connect
+                            to the backend. Please make sure
+                            the UIDetect software is running
+                            and try again.
                         </p>
 
 
@@ -1516,16 +1598,14 @@ function showScanModal(
 
                     </div>
 
-                    <div class="uidetect-row">
-
-                        <b>
-                            Scan Type
-                        </b>
-
-                        <span>
-                            ${friendlyDetectionType}
-                        </span>
-
+                    <div style="
+                        text-align:center;
+                        font-size:14px;
+                        font-weight:bold;
+                        color:#374151;
+                        margin:12px 0;
+                    ">
+                        ${friendlyDetectionType}
                     </div>
 
 
@@ -1541,7 +1621,7 @@ function showScanModal(
                         <div class="uidetect-verdict-status">
 
                             ${securityStatus.icon}
-                            ${displayRisk} Risk
+                            ${securityStatus.label}
 
                         </div>
 
@@ -1575,7 +1655,7 @@ function showScanModal(
                     <div class="uidetect-section">
 
                         <h3>
-                            🔎 What UIDetect Detected
+                            What Did UIDetect Find?
                         </h3>
 
                         <p id="uidetect-about-website">
@@ -1592,7 +1672,7 @@ function showScanModal(
                     <div class="uidetect-section">
 
                         <h3>
-                            ⚠ Why It Matters
+                            What Does This Mean?
                         </h3>
 
                         <p id="uidetect-warning">
@@ -1609,7 +1689,7 @@ function showScanModal(
                     <div class="uidetect-section">
 
                         <h3>
-                            💡 What You Should Do
+                            What Should You Do?
                         </h3>
 
                         <p id="uidetect-recommendation">
@@ -1617,6 +1697,13 @@ function showScanModal(
                         </p>
 
                     </div>
+
+
+                    <!-- =================================
+                         Learn More - Dashboard Style
+                    ================================== -->
+
+                    ${buildLearnMoreHtml(result)}
 
                 </div> 
 
@@ -1855,6 +1942,557 @@ function showScanModal(
             true
         );
     }
+}
+
+
+
+/* =====================================================
+Learn More - Popup Style
+===================================================== */
+
+function getLearnMoreStatusClass(value)
+{
+    const normalized =
+        String(value ?? "Unknown")
+        .toLowerCase()
+        .trim();
+
+    if(
+        normalized === "enabled" ||
+        normalized === "valid" ||
+        normalized === "safe" ||
+        normalized === "present" ||
+        normalized === "established"
+    )
+    {
+        return "status-safe";
+    }
+
+    if(
+        normalized === "disabled" ||
+        normalized === "invalid" ||
+        normalized === "missing"
+    )
+    {
+        return "status-warning";
+    }
+
+    if(
+        normalized === "unsafe" ||
+        normalized === "malicious"
+    )
+    {
+        return "status-danger";
+    }
+
+    return "status-neutral";
+}
+
+
+function getLearnMoreStatus(value)
+{
+    if(
+        value === undefined ||
+        value === null ||
+        String(value).trim() === ""
+    )
+    {
+        return "Unknown";
+    }
+
+    return String(value);
+}
+
+
+function getScanModalSecurityValues(result)
+{
+    const ssl =
+        result.ssl &&
+        typeof result.ssl === "object"
+            ? result.ssl
+            : {};
+
+    const headers =
+        result.securityHeaders &&
+        typeof result.securityHeaders === "object"
+            ? result.securityHeaders
+            : {};
+
+    const whois =
+        result.whois &&
+        typeof result.whois === "object"
+            ? result.whois
+            : {};
+
+    const virusTotal =
+        result.virusTotal &&
+        typeof result.virusTotal === "object"
+            ? result.virusTotal
+            : {};
+
+    return {
+        https:
+            result.https === true
+                ? "Enabled"
+                : result.https === false
+                    ? "Disabled"
+                    : "Unknown",
+
+        safeBrowsing:
+            getLearnMoreStatus(
+                result.safeBrowsing
+            ),
+
+        ssl:
+            ssl.sslValid === true
+                ? "Valid"
+                : ssl.sslValid === false
+                    ? "Invalid"
+                    : "Unknown",
+
+        tls:
+            ssl.protocol || "Unknown",
+
+        hsts:
+            headers["strict-transport-security"]
+                ? "Present"
+                : "Missing",
+
+        csp:
+            headers["content-security-policy"]
+                ? "Present"
+                : "Missing",
+
+        xframe:
+            headers["x-frame-options"]
+                ? "Present"
+                : "Missing",
+
+        xcontent:
+            headers["x-content-type-options"]
+                ? "Present"
+                : "Missing",
+
+        referrer:
+            headers["referrer-policy"]
+                ? "Present"
+                : "Missing",
+
+        whois:
+            whois.status || "Unknown",
+
+        domainAge:
+            whois.domainAge !== undefined &&
+            whois.domainAge !== null &&
+            whois.domainAge !== ""
+                ? String(whois.domainAge) + " years"
+                : "Unknown",
+
+        registrar:
+            whois.registrar || "Unknown",
+
+        virusTotal: virusTotal
+    };
+}
+
+
+function getVirusTotalLearnMoreExplanation(data)
+{
+    const status =
+        data.status || "Unknown";
+
+    const malicious =
+        data.malicious ?? 0;
+
+    const suspicious =
+        data.suspicious ?? 0;
+
+    const harmless =
+        data.harmless ?? 0;
+
+    const normalizedStatus =
+        String(status).toLowerCase();
+
+    if(normalizedStatus === "safe")
+    {
+        if(
+            malicious === 0 &&
+            suspicious === 0
+        )
+        {
+            return "VirusTotal did not report any malicious or suspicious detections. " +
+                   harmless +
+                   " security engines considered the website harmless. " +
+                   "This does not guarantee complete safety.";
+        }
+
+        return "VirusTotal currently classifies the website as safe, although some engine results should still be reviewed.";
+    }
+
+    if(normalizedStatus === "warning")
+    {
+        return "Some VirusTotal security engines considered the website suspicious. Review the website carefully before sharing sensitive information.";
+    }
+
+    if(normalizedStatus === "unsafe")
+    {
+        return "VirusTotal detected malicious activity associated with this website. Avoid continuing and do not enter sensitive information.";
+    }
+
+    return "VirusTotal could not provide a result for this website." + 
+            "This does not mean the website is unsafe. It means VirusTotal's assessment was unavailable, so UIDetect could not use VirusTotal data in this scan.";
+}
+
+
+function buildPopupStyleSecurityItem(
+    title,
+    status,
+    explanationHtml
+)
+{
+    const safeStatus =
+        getLearnMoreStatus(status);
+
+    const statusClass =
+        getLearnMoreStatusClass(status);
+
+    return `
+        <div class="uidetect-popup-security-item">
+
+            <div class="uidetect-popup-security-header">
+
+                <span class="uidetect-popup-security-title">
+                    ${title}
+                </span>
+
+                <span class="uidetect-popup-status ${statusClass}">
+                    ${escapeHtml(safeStatus)}
+                </span>
+
+            </div>
+
+            <details>
+
+                <summary>
+                    Learn More
+                </summary>
+
+                <div class="uidetect-popup-info-box">
+                    ${explanationHtml}
+                </div>
+
+            </details>
+
+        </div>
+    `;
+}
+
+
+function buildLearnMoreHtml(result)
+{
+    const values =
+        getScanModalSecurityValues(result);
+
+    const vt = values.virusTotal;
+
+    const malicious = vt.malicious ?? 0;
+    const suspicious = vt.suspicious ?? 0;
+    const harmless = vt.harmless ?? 0;
+    const undetected = vt.undetected ?? 0;
+    const timeout = vt.timeout ?? 0;
+    const vtStatus = vt.status || "Unknown";
+
+    return `
+        <details class="uidetect-learn-more">
+
+            <summary>
+                Learn More
+            </summary>
+
+            <div class="uidetect-learn-more-content">
+
+                <!-- =====================================
+                     SECURITY CHECKS
+                ====================================== -->
+
+                <div class="uidetect-popup-card">
+
+                    <div class="uidetect-popup-section-heading">
+
+                        <span class="uidetect-popup-section-label">
+                            SECURITY CHECKS
+                        </span>
+
+                        <h2>
+                            Core Protection
+                        </h2>
+
+                    </div>
+
+                    ${buildPopupStyleSecurityItem(
+                        "HTTPS",
+                        values.https,
+                        `
+                            <strong>What is HTTPS?</strong>
+                            <br><br>
+                            HTTPS creates a secure connection between your browser and the website.
+                            <br><br>
+                            <strong>Why does it matter?</strong>
+                            <br><br>
+                            When HTTPS is enabled, information sent between you and the website is protected while it is being transferred.
+                            <br><br>
+                            <strong>Important:</strong>
+                            <br><br>
+                            HTTPS protects the connection, but it does not guarantee that the website itself is trustworthy or free from scams.
+                        `
+                    )}
+
+                    ${buildPopupStyleSecurityItem(
+                        "Google Safe Browsing",
+                        values.safeBrowsing,
+                        `
+                            <strong>What is Google Safe Browsing?</strong>
+                            <br><br>
+                            Google Safe Browsing checks websites for known dangers such as phishing, malware, and other harmful activities.
+                            <br><br>
+                            <strong>What does "Safe" mean?</strong>
+                            <br><br>
+                            A Safe result means Google Safe Browsing did not find a known threat associated with the website at the time of the check.
+                            <br><br>
+                            <strong>Important:</strong>
+                            <br><br>
+                            A Safe result does not guarantee that the website is completely safe. UIDetect uses other security checks to provide a broader assessment.
+                        `
+                    )}
+
+                    ${buildPopupStyleSecurityItem(
+                        "SSL Certificate",
+                        values.ssl,
+                        `
+                            <strong>What is an SSL Certificate?</strong>
+                            <br><br>
+                            An SSL certificate helps a browser verify that a website has a valid certificate and can use a secure connection.
+                            <br><br>
+                            <strong>Why does it matter?</strong>
+                            <br><br>
+                            A valid certificate helps protect your connection and shows that the website's certificate is currently valid.
+                            <br><br>
+                            <strong>Important:</strong>
+                            <br><br>
+                            A valid certificate does not guarantee that the website is safe or legitimate. Scammers can also use valid certificates.
+                        `
+                    )}
+
+                    ${buildPopupStyleSecurityItem(
+                        "TLS Version",
+                        values.tls,
+                        `
+                            <strong>What is TLS?</strong>
+                            <br><br>
+                            TLS is the technology that protects information while it travels between your browser and a website.
+                            <br><br>
+                            <strong>Why does it matter?</strong>
+                            <br><br>
+                            Newer TLS versions provide stronger and more modern protection for your connection.
+                            <br><br>
+                            <strong>For example:</strong>
+                            <br><br>
+                            TLS 1.3 is a modern and secure version of TLS. If UIDetect shows TLS 1.3, the website is using a strong connection protection method.
+                        `
+                    )}
+
+                </div>
+
+
+                <!-- =====================================
+                     WEBSITE SECURITY SETTINGS
+                ====================================== -->
+
+                <div class="uidetect-popup-card">
+
+                    <div class="uidetect-popup-section-heading">
+
+                        <span class="uidetect-popup-section-label">
+                            WEBSITE SECURITY SETTINGS
+                        </span>
+
+                        <h2>
+                            Security Headers
+                        </h2>
+
+                    </div>
+
+                    ${buildPopupStyleSecurityItem(
+                        "HSTS",
+                        values.hsts,
+                        `
+                            HSTS tells your browser to always use a secure HTTPS connection when visiting this website. This helps prevent attackers from trying to force your connection to use an unsafe connection.
+                        `
+                    )}
+
+                    ${buildPopupStyleSecurityItem(
+                        "Content Security Policy",
+                        values.csp,
+                        `
+                            Content Security Policy helps control which scripts and other content are allowed to run on a website. This can reduce the risk of harmful scripts being used to attack visitors.
+                        `
+                    )}
+
+                    ${buildPopupStyleSecurityItem(
+                        "X-Frame-Options",
+                        values.xframe,
+                        `
+                            X-Frame-Options helps prevent a website from being secretly displayed inside another website. This can help protect you from tricks that make you click something without realizing it.
+                        `
+                    )}
+
+                    ${buildPopupStyleSecurityItem(
+                        "X-Content-Type-Options",
+                        values.xcontent,
+                        `
+                            This setting tells your browser to use the file type provided by the website instead of trying to guess it. This helps prevent some types of unsafe content from being treated incorrectly.
+                        `
+                    )}
+
+                    ${buildPopupStyleSecurityItem(
+                        "Referrer Policy",
+                        values.referrer,
+                        `
+                            Referrer Policy controls how much information about the page you came from is shared when you visit another website. This can help reduce unnecessary sharing of your browsing information.
+                        `
+                    )}
+
+                </div>
+
+
+                <!-- =====================================
+                     DOMAIN REPUTATION
+                ====================================== -->
+
+                <div class="uidetect-popup-card">
+
+                    <div class="uidetect-popup-section-heading">
+
+                        <span class="uidetect-popup-section-label">
+                            DOMAIN REPUTATION
+                        </span>
+
+                        <h2>
+                            Domain Information
+                        </h2>
+
+                    </div>
+
+                    ${buildPopupStyleSecurityItem(
+                        "WHOIS Status",
+                        values.whois,
+                        `
+                            WHOIS information shows the registration history of a website's domain. UIDetect uses this information to estimate whether the domain is new or has been established for many years. An established domain may have a longer history, but this does not guarantee that the website is safe.
+                        `
+                    )}
+
+                    ${buildPopupStyleSecurityItem(
+                        "Domain Age",
+                        values.domainAge,
+                        `
+                            Domain Age shows how long the website's domain has existed. A very new domain may deserve more caution because it has a short history. An older domain has a longer registration history, but age alone does not mean that a website is trustworthy.
+                        `
+                    )}
+
+                    ${buildPopupStyleSecurityItem(
+                        "Registrar",
+                        values.registrar,
+                        `
+                            The registrar is the company that manages the registration of the website's domain name. It helps maintain the domain registration, but the registrar itself does not determine whether the website is safe.
+                        `
+                    )}
+
+                </div>
+
+
+                <!-- =====================================
+                     MULTI-ENGINE REPUTATION
+                ====================================== -->
+
+                <div class="uidetect-popup-card">
+
+                    <div class="uidetect-popup-section-heading">
+
+                        <span class="uidetect-popup-section-label">
+                            MULTI-ENGINE REPUTATION
+                        </span>
+
+                        <h2>
+                            VirusTotal Analysis
+                        </h2>
+
+                    </div>
+
+                    <div class="uidetect-popup-virustotal-status ${getLearnMoreStatusClass(vtStatus)}">
+                        ${escapeHtml(getLearnMoreStatus(vtStatus))}
+                    </div>
+
+                    <div class="uidetect-popup-reputation-grid">
+
+                        <div class="uidetect-popup-reputation-stat">
+                            <span class="uidetect-popup-reputation-value">
+                                ${escapeHtml(String(malicious))}
+                            </span>
+                            <span class="uidetect-popup-reputation-label">
+                                Malicious
+                            </span>
+                        </div>
+
+                        <div class="uidetect-popup-reputation-stat">
+                            <span class="uidetect-popup-reputation-value">
+                                ${escapeHtml(String(suspicious))}
+                            </span>
+                            <span class="uidetect-popup-reputation-label">
+                                Suspicious
+                            </span>
+                        </div>
+
+                        <div class="uidetect-popup-reputation-stat">
+                            <span class="uidetect-popup-reputation-value">
+                                ${escapeHtml(String(harmless))}
+                            </span>
+                            <span class="uidetect-popup-reputation-label">
+                                Harmless
+                            </span>
+                        </div>
+
+                        <div class="uidetect-popup-reputation-stat">
+                            <span class="uidetect-popup-reputation-value">
+                                ${escapeHtml(String(undetected))}
+                            </span>
+                            <span class="uidetect-popup-reputation-label">
+                                Undetected
+                            </span>
+                        </div>
+
+                        <div class="uidetect-popup-reputation-stat">
+                            <span class="uidetect-popup-reputation-value">
+                                ${escapeHtml(String(timeout))}
+                            </span>
+                            <span class="uidetect-popup-reputation-label">
+                                Timeout
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div class="uidetect-popup-info-box uidetect-popup-reputation-explanation">
+                        ${escapeHtml(
+                            getVirusTotalLearnMoreExplanation(vt)
+                        )}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </details>
+    `;
 }
 
 

@@ -823,3 +823,311 @@ Overall Risk States
 {
     color:#334155;
 }
+/* =====================================================
+Scan Modal - Dashboard Popup Learn More Style
+===================================================== */
+
+.uidetect-learn-more
+{
+    margin-top:16px;
+    border:1px solid #E1E7EF;
+    border-radius:12px;
+    background:#FFFFFF;
+    overflow:hidden;
+}
+
+.uidetect-learn-more > summary
+{
+    padding:13px 14px;
+    background:#F8FAFC;
+    color:#1565C0;
+    font-size:13px;
+    font-weight:700;
+    line-height:1.4;
+    cursor:pointer;
+    list-style:none;
+}
+
+.uidetect-learn-more > summary::-webkit-details-marker
+{
+    display:none;
+}
+
+.uidetect-learn-more > summary::after
+{
+    content:"▼";
+    margin-left:6px;
+    color:#1565C0;
+    font-size:8px;
+    display:inline-block;
+    transition:transform 0.2s ease;
+}
+
+.uidetect-learn-more[open] > summary::after
+{
+    transform:rotate(180deg);
+}
+
+.uidetect-learn-more-content
+{
+    padding:0 12px 12px 12px;
+}
+
+.uidetect-popup-card
+{
+    background:#FFFFFF;
+    border:1px solid #E1E7EF;
+    border-radius:12px;
+    padding:15px;
+    margin-top:12px;
+    box-shadow:0 3px 10px rgba(21,101,192,0.07);
+}
+
+.uidetect-popup-section-heading
+{
+    margin-bottom:12px;
+}
+
+.uidetect-popup-section-label
+{
+    display:block;
+    color:#1565C0;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:0.8px;
+    line-height:1.4;
+}
+
+.uidetect-popup-section-heading h2
+{
+    margin:4px 0 0 0;
+    color:#263238;
+    font-size:17px;
+    font-weight:700;
+    line-height:1.3;
+}
+
+.uidetect-popup-security-item
+{
+    padding:11px 0;
+    border-bottom:1px solid #EDF0F3;
+}
+
+.uidetect-popup-security-item:last-child
+{
+    border-bottom:none;
+}
+
+.uidetect-popup-security-header
+{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    width:100%;
+    gap:10px;
+}
+
+.uidetect-popup-security-title
+{
+    color:#263238;
+    font-size:14px;
+    font-weight:600;
+    line-height:1.4;
+}
+
+.uidetect-popup-status
+{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:65px;
+    padding:4px 8px;
+    border-radius:12px;
+    font-size:12px;
+    font-weight:700;
+    line-height:1.3;
+    white-space:nowrap;
+}
+
+.uidetect-popup-status.status-neutral
+{
+    background:#ECEFF1;
+    color:#455A64;
+}
+
+.uidetect-popup-status.status-safe
+{
+    background:#E8F5E9;
+    color:#2E7D32;
+}
+
+.uidetect-popup-status.status-good
+{
+    background:#E3F2FD;
+    color:#1565C0;
+}
+
+.uidetect-popup-status.status-warning
+{
+    background:#FFF3E0;
+    color:#EF6C00;
+}
+
+.uidetect-popup-status.status-danger
+{
+    background:#FFEBEE;
+    color:#C62828;
+}
+
+.uidetect-popup-security-item details
+{
+    margin-top:8px;
+}
+
+.uidetect-popup-security-item summary
+{
+    color:#1565C0;
+    font-size:12px;
+    font-weight:600;
+    line-height:1.4;
+    cursor:pointer;
+    list-style:none;
+}
+
+.uidetect-popup-security-item summary::-webkit-details-marker
+{
+    display:none;
+}
+
+.uidetect-popup-security-item summary::after
+{
+    content:"▼";
+    margin-left:5px;
+    color:#1565C0;
+    font-size:8px;
+    display:inline-block;
+    transition:transform 0.2s ease;
+}
+
+.uidetect-popup-security-item details[open] summary::after
+{
+    transform:rotate(180deg);
+}
+
+.uidetect-popup-info-box
+{
+    padding:11px 12px;
+    margin-top:8px;
+    border-left:3px solid #90CAF9;
+    border-radius:5px;
+    background:#F7FAFC;
+    color:#444444;
+    font-size:13px;
+    font-weight:400;
+    line-height:1.6;
+}
+
+.uidetect-popup-virustotal-status
+{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:65px;
+    padding:4px 8px;
+    border-radius:12px;
+    font-size:12px;
+    font-weight:700;
+    line-height:1.3;
+    white-space:nowrap;
+}
+
+.uidetect-popup-virustotal-status.status-neutral
+{
+    background:#ECEFF1;
+    color:#455A64;
+}
+
+.uidetect-popup-virustotal-status.status-safe
+{
+    background:#E8F5E9;
+    color:#2E7D32;
+}
+
+.uidetect-popup-virustotal-status.status-warning
+{
+    background:#FFF3E0;
+    color:#EF6C00;
+}
+
+.uidetect-popup-virustotal-status.status-danger
+{
+    background:#FFEBEE;
+    color:#C62828;
+}
+
+.uidetect-popup-reputation-grid
+{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:6px;
+    margin-top:10px;
+}
+
+.uidetect-popup-reputation-stat
+{
+    padding:9px 4px;
+    text-align:center;
+    border:1px solid #E5EAF0;
+    border-radius:8px;
+    background:#F9FAFC;
+}
+
+.uidetect-popup-reputation-value
+{
+    display:block;
+    color:#263238;
+    font-size:17px;
+    font-weight:700;
+    line-height:1.3;
+}
+
+.uidetect-popup-reputation-label
+{
+    display:block;
+    margin-top:4px;
+    color:#555555;
+    font-size:9px;
+    font-weight:600;
+    line-height:1.3;
+}
+
+.uidetect-popup-reputation-explanation
+{
+    margin-top:10px;
+}
+
+@media (max-width:520px)
+{
+    .uidetect-popup-reputation-grid
+    {
+        grid-template-columns:repeat(3,1fr);
+    }
+}
+
+@media (max-width:420px)
+{
+    .uidetect-popup-security-header
+    {
+        align-items:flex-start;
+    }
+
+    .uidetect-popup-status
+    {
+        flex:none;
+    }
+
+    .uidetect-popup-reputation-grid
+    {
+        grid-template-columns:repeat(2,1fr);
+    }
+}
