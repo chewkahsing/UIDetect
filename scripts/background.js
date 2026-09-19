@@ -9,7 +9,7 @@
      and recommendation to the UI
    - Handle scan cancellation
    - Handle security header detection
-   - Handle right-click and automatic scans
+   - Handle right-click scans
 
 ===================================================== */
 
@@ -544,6 +544,21 @@ function registerMessageListener()
                             return;
                         }
 
+                        const interactionScanURL =
+                            getInteractionScanURL(
+                                tab.url
+                            );
+
+                        console.log(
+                            "UIDetect: Interaction scan original URL:",
+                            tab.url
+                        );
+
+                        console.log(
+                            "UIDetect: Interaction scan assessment URL:",
+                            interactionScanURL
+                        );
+
                         const urlValidation =
                             validateURL(tab.url);
 
@@ -596,7 +611,7 @@ function registerMessageListener()
                                                 scanId,
 
                                             url:
-                                                tab.url,
+                                                interactionScanURL,
 
                                             pageTitle:
                                                 websiteInformation.pageTitle,
@@ -605,7 +620,11 @@ function registerMessageListener()
                                                 websiteInformation.metaDescription,
 
                                             securityHeaders:
-                                                securityHeadersByURL[normalizeURL(tab.url)] ||
+                                                securityHeadersByURL[
+                                                    normalizeURL(
+                                                        interactionScanURL
+                                                    )
+                                                ] ||
                                                 websiteResult.securityHeaders ||
                                                 {},
 
@@ -617,6 +636,16 @@ function registerMessageListener()
                                 BACKEND_TIMEOUT,
                                 scanController
                             );
+
+                        console.log(
+                            "UIDetect: Interaction scan HTTP status:",
+                            response.status
+                        );
+
+                        console.log(
+                            "UIDetect: Interaction scan URL:",
+                            interactionScanURL
+                        );
 
                         const result =
                             await parseBackendResponse(
@@ -634,6 +663,10 @@ function registerMessageListener()
                     }
                     catch(error)
                     {
+                        // =============================================
+                        // User Cancelled Interaction Scan
+                        // =============================================
+
                         if(
                             error.message ===
                             "REQUEST_ABORTED"
@@ -673,10 +706,78 @@ function registerMessageListener()
                         );
 
 
+                        // =============================================
+                        // Backend Timeout
+                        // =============================================
+
+                        if(
+                            error.message ===
+                            "REQUEST_TIMEOUT"
+                        )
+                        {
+                            sendResponse(
+                                createError(
+                                    ERROR_CODES.BACKEND_TIMEOUT,
+                                    "The security scan took too long to respond.",
+                                    true
+                                )
+                            );
+
+                            return;
+                        }
+
+
+                        // =============================================
+                        // Invalid JSON Response
+                        // =============================================
+
+                        if(
+                            error.message ===
+                            "INVALID_JSON_RESPONSE"
+                        )
+                        {
+                            sendResponse(
+                                createError(
+                                    ERROR_CODES.INVALID_RESPONSE,
+                                    "UIDetect received an invalid response from the backend.",
+                                    true
+                                )
+                            );
+
+                            return;
+                        }
+
+
+                        // =============================================
+                        // HTTP Error
+                        // =============================================
+
+                        if(
+                            error.message.startsWith("HTTP_")
+                        )
+                        {
+                            sendResponse(
+                                createError(
+                                    ERROR_CODES.BACKEND_HTTP_ERROR,
+                                    "The UIDetect backend returned an error.",
+                                    true
+                                )
+                            );
+
+                            return;
+                        }
+
+
+                        // =============================================
+                        // Backend Unavailable
+                        // Usually means Flask / UIDetect software
+                        // is not running or cannot be reached.
+                        // =============================================
+
                         sendResponse(
                             createError(
                                 ERROR_CODES.BACKEND_UNAVAILABLE,
-                                "Unable to complete the interaction security assessment.",
+                                "UIDetect is not running. Please start the UIDetect software and try the scan again.",
                                 true
                             )
                         );
@@ -1815,7 +1916,7 @@ async function performScanRequest(
 
             return createError(
                 ERROR_CODES.BACKEND_UNAVAILABLE,
-                "Unable to connect to the UIDetect backend.",
+                "UIDetect is not running. Please start the UIDetect software and try the scan again.",
                 true
             );
         }
@@ -1858,6 +1959,57 @@ function normalizeURL(url) {
         return url;
     }
 }    
+
+function getInteractionScanURL(url)
+{
+    if(!url)
+    {
+        return url;
+    }
+
+    try
+    {
+        const parsedURL =
+            new URL(url);
+
+        const isGoogleForms =
+            (
+                parsedURL.hostname ===
+                    "docs.google.com" &&
+
+                parsedURL.pathname
+                    .toLowerCase()
+                    .startsWith("/forms/")
+            );
+
+        if(
+            isGoogleForms &&
+            parsedURL.pathname
+                .toLowerCase()
+                .endsWith("/formresponse")
+        )
+        {
+            parsedURL.pathname =
+                parsedURL.pathname.replace(
+                    /\/formresponse$/i,
+                    "/viewform"
+                );
+
+            return parsedURL.toString();
+        }
+
+        return url;
+    }
+    catch(error)
+    {
+        console.warn(
+            "UIDetect: Unable to normalize interaction scan URL:",
+            error
+        );
+
+        return url;
+    }
+}
 
 
 /* =====================================================
@@ -2134,28 +2286,132 @@ async function sendToPage(
     }
 }
 
+
+/**
+ * Resolve a URL to its final destination before scanning.
+ *
+ * Example:
+ * Google redirect URL
+ *      ↓
+ * https://myflixerz.day/
+ *
+ * This prevents UIDetect from scanning the redirect wrapper
+ * instead of the website the user actually selected.
+ */
+async function resolveRedirectURL(originalURL) {
+    if (!originalURL) {
+        throw new Error("Empty URL");
+    }
+
+    console.log(
+        "UIDetect: Resolving target URL:",
+        originalURL
+    );
+
+    try {
+        const controller =
+            new AbortController();
+
+        const timeout =
+            setTimeout(
+                () => controller.abort(),
+                8000
+            );
+
+        const response =
+            await fetch(
+                originalURL,
+                {
+                    method: "GET",
+                    redirect: "follow",
+                    signal: controller.signal
+                }
+            );
+
+        clearTimeout(timeout);
+
+        const finalURL =
+            response.url || originalURL;
+
+        console.log(
+            "UIDetect: Final target URL:",
+            finalURL
+        );
+
+        return finalURL;
+
+    } catch (error) {
+
+        console.warn(
+            "UIDetect: Unable to resolve redirect:",
+            error
+        );
+
+        /*
+         * Do NOT silently treat the redirect URL as the
+         * final website.
+         *
+         * Returning null allows the caller to stop the scan
+         * safely instead of scanning the wrong website.
+         */
+        return null;
+    }
+}
+
+
 // =====================================
 // RIGHT CLICK EVENT
 // =====================================
 
 
 chrome.contextMenus.onClicked.addListener(
-
     async(info, tab) =>
     {
-        if(
-            info.menuItemId !==
-            "uidetectScan"
-        )
+        if(info.menuItemId !== "uidetectScan")
         {
             return;
         }
 
-        const url =
+        /*
+         * The URL supplied by Chrome may be a redirect/tracking
+         * URL, especially for search engine results.
+         */
+        const originalURL =
             info.linkUrl;
 
         console.log(
-            "UIDetect scanning:",
+            "UIDetect Right-Click original URL:",
+            originalURL
+        );
+
+        if(!originalURL)
+        {
+            console.error(
+                "UIDetect: No link URL available."
+            );
+
+            return;
+        }
+
+        /*
+         * Resolve the actual destination before scanning.
+         */
+        const url =
+            await resolveRedirectURL(
+                originalURL
+            );
+
+        if(!url)
+        {
+            console.error(
+                "UIDetect: Could not determine final destination URL."
+            );
+
+            return;
+        }
+
+        console.log(
+            "UIDetect scanning final destination:",
             url
         );
 
@@ -2304,10 +2560,26 @@ chrome.contextMenus.onClicked.addListener(
                 result.success === false
             )
             {
-                throw new Error(
-                    result.error?.message ||
-                    "RIGHT_CLICK_SCAN_FAILED"
-                );
+                const backendError =
+                    result.error || {};
+
+                const backendErrorCode =
+                    backendError.code ||
+                    ERROR_CODES.UNKNOWN_ERROR;
+
+                const backendErrorMessage =
+                    backendError.message ||
+                    "The UIDetect backend could not complete the scan.";
+
+                const backendErrorObject =
+                    new Error(
+                        backendErrorMessage
+                    );
+
+                backendErrorObject.uidetectErrorCode =
+                    backendErrorCode;
+
+                throw backendErrorObject;
             }
 
             // =============================================
@@ -2455,12 +2727,13 @@ chrome.contextMenus.onClicked.addListener(
             );
 
             let warning =
-                "UIDetect could not complete the scan.";
+                "UIDetect is not running. Please start the UIDetect software and try the scan again.";
 
             let recommendation =
-                "Please try again.";
+                "Start the UIDetect software and try the scan again.";
 
             let errorCode =
+                error.uidetectErrorCode ||
                 ERROR_CODES.BACKEND_UNAVAILABLE;
 
             // =============================================
@@ -2520,6 +2793,26 @@ chrome.contextMenus.onClicked.addListener(
             }
 
             // =============================================
+            // Show Backend Unavailable Popup
+            // =============================================
+
+            if (
+                errorCode ===
+                ERROR_CODES.BACKEND_UNAVAILABLE
+            )
+            {
+                await sendToPage(
+                    tab.id,
+                    {
+                        action:
+                            "SHOW_BACKEND_UNAVAILABLE"
+                    }
+                );
+
+                return;
+            }
+
+            // =============================================
             // Show Error Modal
             // =============================================
 
@@ -2535,7 +2828,7 @@ chrome.contextMenus.onClicked.addListener(
                         {
                             url: url,
 
-                            score: 0,
+                            score: "--",
 
                             level:
                                 "Unknown",
@@ -2568,7 +2861,7 @@ chrome.contextMenus.onClicked.addListener(
         finally {
 
             // =====================================
-            // Clear Active Automatic Scan State
+            // Clear Right-Click Scan State
             // =====================================
 
             if(
@@ -2583,556 +2876,6 @@ chrome.contextMenus.onClicked.addListener(
                     null;
             }
 
-            autoScanInProgress =
-                false;
-
         }
     }
 );
-
-// =====================================
-// PHASE 10 - AUTOMATIC LINK SCAN
-// Scan ONLY Google Form navigation
-// =====================================
-
-let lastAutoScannedURL = "";
-
-let autoScanInProgress = false;
-
-function isGoogleFormURL(url)
-{
-    return (
-        typeof url === "string" &&
-        url.includes("docs.google.com/forms")
-    );
-}
-
-
-chrome.webNavigation.onCommitted.addListener(
-    async (details) => {
-
-        // =====================================
-        // MAIN FRAME ONLY
-        // =====================================
-
-        if (details.frameId !== 0) {
-            return;
-        }
-
-
-        const url = details.url;
-
-
-        // =====================================
-        // Clear Stale Assessment On Navigation
-        // =====================================
-
-        if (
-            !isAssessmentForCurrentURL(
-                latestAssessment,
-                url
-            )
-        )
-        {
-            console.log(
-                "PHASE 10: Clearing stale website assessment."
-            );
-
-            latestAssessment = {};
-        }
-
-
-
-        const urlValidation =
-            validateURL(url);
-
-        if(!urlValidation.valid)
-        {
-            console.log(
-                "PHASE 10: Invalid URL - skipped:",
-                urlValidation.reason
-            );
-
-            return;
-        }
-
-
-        console.log(
-            "PHASE 10 NAVIGATION:",
-            url
-        );
-
-
-
-        // =====================================
-        // GOOGLE FORM ONLY
-        // =====================================
-
-        if (!isGoogleFormURL(url)) 
-        {
-
-            console.log(
-                "PHASE 10: Not Google Form - skipped"
-            );
-
-            return;
-        }
-
-        // =====================================
-        // PREVENT DUPLICATE GOOGLE FORM SCANS
-        // =====================================
-
-        if (url === lastAutoScannedURL) {
-
-            console.log(
-                "PHASE 10: URL already scanned - skipped"
-            );
-
-            return;
-        }
-
-
-         // =====================================
-        // GET CURRENT TAB
-        // =====================================
-
-        const tab =
-            await chrome.tabs.get(
-                details.tabId
-            );
-
-        if(!tab || !tab.id)
-        {
-            console.warn(
-                "PHASE 10: Unable to access current tab."
-            );
-
-            return;
-        }
-
-
-        // =====================================
-        // GET WEBSITE INFORMATION
-        // =====================================
-
-        const websiteInformation =
-            await getWebsiteInformation(
-                tab
-            );
-
-        console.log(
-            "PHASE 10 Website Information:",
-            websiteInformation
-        );
-
-
-
-
-
-        // =====================================
-        // SCAN BACKEND
-        // =====================================
-
-        // =====================================
-        // PREVENT DUPLICATE SCANS
-        // =====================================
-
-        if (
-            autoScanInProgress ||
-            activeScanPromise
-        )
-        {
-            console.log(
-                "PHASE 10: Another UIDetect scan is already running - skipped."
-            );
-
-            return;
-        }
-
-        const autoScanController =
-            new AbortController();
-
-        const autoScanId =
-            crypto.randomUUID();
-
-        activeScanController =
-            autoScanController;
-
-        activeScanId =
-            autoScanId;
-
-        autoScanInProgress =
-            true;
-
-
-       
-
-
-        // =====================================
-        // SHOW LOADING POPUP
-        // Wait for content script to become ready
-        // =====================================
-
-        let loadingPopupDisplayed = false;
-
-        for(let attempt = 1; attempt <= 60; attempt++)
-        {
-            try
-            {
-                await chrome.tabs.sendMessage(
-                    details.tabId,
-                    {
-                        action:
-                            "SHOW_LOADING"
-                    }
-                );
-
-                loadingPopupDisplayed = true;
-
-                console.log(
-                    "PHASE 10: Loading popup displayed."
-                );
-
-                break;
-            }
-            catch(error)
-            {
-                console.warn(
-                    "PHASE 10: Loading popup attempt " +
-                    attempt +
-                    "/60 failed:",
-                    error.message
-                );
-
-                await new Promise(
-                    resolve =>
-                        setTimeout(
-                            resolve,
-                            100
-                        )
-                );
-            }
-        }
-
-        if(!loadingPopupDisplayed)
-        {
-            console.warn(
-                "PHASE 10: Loading popup could not be displayed."
-            );
-        }
-
-
-        try {
-
-            console.log(
-                "PHASE 10: Sending to backend..."
-            );
-
-            console.log(
-                "PHASE 10 URL:",
-                url
-            );
-
-            console.log(
-                "PHASE 10 SCAN TIMEOUT:",
-                SCAN_TIMEOUT
-            );
-
-
-
-            const response =
-                await fetchWithTimeout(
-                    BACKEND_BASE_URL +
-                    "/api/scan",
-                    {
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body: JSON.stringify({
-
-                            scanId:
-                                autoScanId,
-
-                            url:
-                                url,
-
-                            pageTitle:
-                                websiteInformation.pageTitle,
-
-                            metaDescription:
-                                websiteInformation.metaDescription,
-
-                            interaction:
-                                "BROWSE",
-
-                            securityHeaders:
-                                securityHeadersByURL[normalizeURL(tab.url)] ||
-                                websiteResult.securityHeaders ||
-                                {}
-                        })
-
-                    },
-
-                    SCAN_TIMEOUT,
-                    autoScanController
-
-                );
-
-
-            console.log(
-                "PHASE 10: Backend status:",
-                response.status
-            );
-
-            const result =
-                await parseBackendResponse(
-                    response
-                );
-
-            console.log(
-                "PHASE 10 RESULT:",
-                result
-            );
-
-            // =====================================
-            // Backend Returned Error
-            // =====================================
-
-            if (
-                result.success === false
-            )
-            {
-                throw new Error(
-                    result.error?.message ||
-                    "PHASE_10_SCAN_FAILED"
-                );
-            }
-
-            latestAssessment =
-                result.assessment ||
-                result;
-
-            // =====================================
-            // Preserve Final Posture
-            // =====================================
-
-            if(
-                result.finalPosture &&
-                !latestAssessment.finalPosture
-            )
-            {
-                latestAssessment.finalPosture =
-                    result.finalPosture;
-            }
-
-            websiteResult =
-            {
-                ...websiteResult,
-                ...latestAssessment
-            };
-
-
-            // =====================================
-            // MARK URL AS SCANNED
-            // Prevent duplicate Google Form scans
-            // =====================================
-
-            lastAutoScannedURL = url;
-
-            console.log(
-                "PHASE 10: URL marked as scanned:",
-                lastAutoScannedURL
-            );
-
-
-
-            // =====================================
-            // CLOSE LOADING POPUP
-            // =====================================
-
-            try
-            {
-                await chrome.tabs.sendMessage(
-                    details.tabId,
-                    {
-                        action:
-                            "HIDE_WARNING_LOADING"
-                    }
-                );
-
-                console.log(
-                    "PHASE 10: Loading popup closed."
-                );
-            }
-            catch(error)
-            {
-                console.warn(
-                    "PHASE 10: Unable to close loading popup:",
-                    error.message
-                );
-            }
-
-
-            // =====================================
-            // SEND FINAL SECURITY WARNING
-            // =====================================
-
-            await chrome.tabs.sendMessage(
-                details.tabId,
-                {
-                    action:
-                        "SHOW_SECURITY_WARNING",
-
-                    data:
-                    {
-                        ...latestAssessment,
-
-                    
-                    }
-                }
-            );
-
-
-            console.log(
-                "PHASE 10: Result popup displayed"
-            );
-
-        }
-        catch(error) {
-
-            // =====================================
-            // User Cancelled Phase 10 Scan
-            // =====================================
-
-            if(
-                error.message ===
-                "REQUEST_ABORTED"
-            )
-            {
-                console.log(
-                    "UIDetect: Phase 10 automatic scan cancelled by user."
-                );
-
-                return;
-            }
-
-
-            console.error(
-                "PHASE 10 SCAN FAILED:",
-                error
-            );
-
-            let errorMessage =
-                "Unable to scan this website.";
-
-            let errorCode =
-                "PHASE_10_SCAN_FAILED";
-
-            if(
-                error.message ===
-                "REQUEST_TIMEOUT"
-            )
-            {
-                errorMessage =
-                    "The security scan took too long to respond.";
-
-                errorCode =
-                    "BACKEND_TIMEOUT";
-            }
-            else if(
-                error.message ===
-                "INVALID_JSON_RESPONSE"
-            )
-            {
-                errorMessage =
-                    "The backend returned an invalid response.";
-
-                errorCode =
-                    "INVALID_RESPONSE";
-            }
-            else if(
-                error.message.startsWith(
-                    "HTTP_"
-                )
-            )
-            {
-                errorMessage =
-                    "The UIDetect backend returned an error.";
-
-                errorCode =
-                    "BACKEND_HTTP_ERROR";
-            }
-
-
-            // =====================================
-            // SHOW ERROR POPUP
-            // =====================================
-
-            try {
-
-                await chrome.tabs.sendMessage(
-                    details.tabId,
-                    {
-                        action:
-                            "SHOW_SCAN_MODAL",
-
-                        data: {
-
-                            success:
-                                false,
-
-                            error: {
-
-                                message:
-                                    "Unable to scan this website."
-
-                            }
-
-                        }
-                    }
-                );
-
-            }
-            catch(sendError) {
-
-                console.error(
-                    "PHASE 10: Error popup failed:",
-                    sendError
-                );
-
-            }
-
-        }
-        finally
-        {
-            // =====================================
-            // Clear Phase 10 Active Scan State
-            // =====================================
-
-            if(
-                activeScanController ===
-                autoScanController
-            )
-            {
-                activeScanController =
-                    null;
-
-                activeScanId =
-                    null;
-            }
-
-            autoScanInProgress =
-                false;
-
-            console.log(
-                "PHASE 10: Active scan state cleared."
-            );
-        }
-
-    }
-);
-

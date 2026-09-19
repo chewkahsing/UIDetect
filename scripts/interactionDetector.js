@@ -46,7 +46,13 @@ Interaction Detection State
 let popupOpen = false;
 let lastInteraction = 0;
 let lastInteractionType = "";
+
 let bypassNextInteraction = false;
+let bypassElement = null;
+let bypassForm = null;
+let bypassInteractionType = "";
+let bypassInteractionUntil = 0;
+
 
 /* =====================================================
 Register Interaction Detection
@@ -57,6 +63,78 @@ document.addEventListener(
     detectInteraction,
     true
 );
+
+/* =====================================================
+Approved Interaction Bypass
+===================================================== */
+
+function enableInteractionBypass(
+    element,
+    interactionType
+)
+{
+    try
+    {
+        bypassNextInteraction = true;
+
+        bypassElement =
+            element || null;
+
+        bypassForm =
+            element &&
+            typeof element.closest === "function"
+                ? element.closest("form")
+                : null;
+
+        bypassInteractionType =
+            interactionType || "";
+
+        /*
+        Allow the approved interaction flow
+        to continue for a short period.
+        */
+        bypassInteractionUntil =
+            Date.now() + 5000;
+
+        console.log(
+            "UIDetect: Approved interaction bypass enabled.",
+            {
+                interaction:
+                    bypassInteractionType,
+
+                element:
+                    bypassElement,
+
+                form:
+                    bypassForm,
+
+                expiresIn:
+                    "5 seconds"
+            }
+        );
+    }
+    catch(error)
+    {
+        console.error(
+            "UIDetect: Failed to enable interaction bypass:",
+            error
+        );
+    }
+}
+
+
+function clearInteractionBypass()
+{
+    bypassNextInteraction = false;
+
+    bypassElement = null;
+
+    bypassForm = null;
+
+    bypassInteractionType = "";
+
+    bypassInteractionUntil = 0;
+}
 
 /* =====================================================
 Main Interaction Detection
@@ -74,9 +152,25 @@ async function detectInteraction(event)
 
         if (bypassNextInteraction)
         {
-            bypassNextInteraction = false;
+            const now =
+                Date.now();
 
-            return;
+            /*
+            -------------------------------------------------
+            Bypass expired
+            -------------------------------------------------
+            */
+
+            if (
+                now >= bypassInteractionUntil
+            )
+            {
+                console.log(
+                    "UIDetect: Approved interaction bypass expired."
+                );
+
+                clearInteractionBypass();
+            }
         }
 
 
@@ -119,6 +213,132 @@ async function detectInteraction(event)
         {
             return;
         }
+
+        /*
+        =====================================================
+        Approved Interaction Target Bypass
+        =====================================================
+        */
+
+        if (
+            bypassNextInteraction &&
+            Date.now() < bypassInteractionUntil
+        )
+        {
+            /*
+            -------------------------------------------------
+            Determine Current Interactive Element
+            -------------------------------------------------
+            */
+
+            const currentInteractiveElement =
+                targetElement.closest(
+                    "button, a, input, select, textarea, [role='button'], [onclick]"
+                );
+
+
+            /*
+            -------------------------------------------------
+            Check Whether Interaction Belongs To
+            Approved Element
+            -------------------------------------------------
+            */
+
+            const sameElement =
+                bypassElement &&
+                (
+                    currentInteractiveElement ===
+                    bypassElement
+                );
+
+
+            /*
+            -------------------------------------------------
+            Check Whether Interaction Belongs To
+            Approved Form
+            -------------------------------------------------
+            */
+
+            const currentForm =
+                targetElement.closest(
+                    "form"
+                );
+
+
+            const sameForm =
+                bypassForm &&
+                currentForm === bypassForm;
+
+
+            /*
+            -------------------------------------------------
+            Check Interaction Type
+            -------------------------------------------------
+            */
+
+            let sameInteraction =
+                false;
+
+            if (sameForm)
+            {
+                try
+                {
+                    const currentInteraction =
+                        currentInteractiveElement
+                            ? getInteractionType(
+                                currentInteractiveElement
+                            )
+                            : null;
+
+                    sameInteraction =
+                        currentInteraction ===
+                        bypassInteractionType;
+                }
+                catch(error)
+                {
+                    console.error(
+                        "UIDetect: Failed to compare bypass interaction:",
+                        error
+                    );
+                }
+            }
+
+
+            /*
+            -------------------------------------------------
+            Apply Bypass
+            -------------------------------------------------
+            */
+
+            if (
+                sameElement ||
+                (
+                    sameForm &&
+                    sameInteraction
+                )
+            )
+            {
+                console.log(
+                    "UIDetect: Approved interaction bypassed.",
+                    {
+                        interaction:
+                            bypassInteractionType,
+
+                        sameElement:
+                            sameElement,
+
+                        sameForm:
+                            sameForm,
+
+                        sameInteraction:
+                            sameInteraction
+                    }
+                );
+
+                return;
+            }
+        }
+
 
 
         /*
@@ -450,9 +670,10 @@ async function detectInteraction(event)
                     to continue.
                     */
 
-                    bypassNextInteraction =
-                        true;
-
+                    enableInteractionBypass(
+                        element,
+                        detection.interaction
+                    );
 
                     element.dispatchEvent(
                         new MouseEvent(
@@ -602,9 +823,10 @@ async function detectInteraction(event)
                         "UIDetect: User chose Continue without backend assessment."
                     );
 
-                    bypassNextInteraction =
-                        true;
-
+                    enableInteractionBypass(
+                        element,
+                        detection.interaction
+                    );
 
                     element.dispatchEvent(
                         new MouseEvent(
@@ -743,9 +965,10 @@ async function detectInteraction(event)
                 );
 
 
-                bypassNextInteraction =
-                    true;
-
+                enableInteractionBypass(
+                    element,
+                    detection.interaction
+                );
 
                 element.dispatchEvent(
                     new MouseEvent(
@@ -1209,8 +1432,51 @@ function applyLoginContext(
                         "Explicit Login Control"
                     );
                 }
+                /*
+                =====================================================
+                Google Sign-In Next Button
+                =====================================================
+
+                The Google Account login page uses a button
+                labelled only "Next".
+
+                getInteractionType() has already confirmed that
+                this is a Google Sign-In page.
+
+                Give this specific interaction enough evidence
+                to pass the minimum detection threshold.
+                =====================================================
+                */
+
+                const pageText =
+                    (
+                        document.body?.innerText ||
+                        ""
+                    ).toLowerCase();
+
+
+                const isGoogleSignInNext =
+                    (
+                        elementText === "next" &&
+                        pageText.includes("sign in") &&
+                        pageText.includes(
+                            "this account will be available to other google apps in the browser"
+                        )
+                    );
+
+
+                if (isGoogleSignInNext)
+                {
+                    detection.score +=
+                        50;
+
+                    detection.evidence.push(
+                        "Google Sign-In Next Button"
+                    );
+                }
             }
         }
+    
 
 
     /*
@@ -1346,6 +1612,7 @@ function applyLoginContext(
         "Login Dialog"
     );
 }
+
 
 
 
@@ -2609,6 +2876,63 @@ function getInteractionType(element)
 
     /*
     ---------------------------------------------
+    Google Sign-In Next Button
+    ---------------------------------------------
+
+    Google account sign-in may use a button
+    labelled only "Next" instead of "Login"
+    or "Sign In".
+
+    Only classify "Next" as Login when the
+    surrounding page clearly matches the
+    Google Account sign-in page.
+    ---------------------------------------------
+    */
+
+    const pageText =
+        (
+            document.body?.innerText ||
+            ""
+        ).toLowerCase();
+
+
+    const isNextButton =
+        (
+            text === "next" ||
+            text === "next\n"
+        );
+
+
+    const isGoogleSignInPage =
+        (
+            pageText.includes("sign in") &&
+            (
+                pageText.includes(
+                    "this account will be available to other google apps in the browser"
+                )
+                ||
+                pageText.includes(
+                    "not your computer? use guest mode"
+                )
+            )
+        );
+
+
+    if (
+        isNextButton &&
+        isGoogleSignInPage
+    )
+    {
+        console.log(
+            "UIDetect: Google Sign-In Next button detected as Login."
+        );
+
+        return "Login";
+    }
+
+
+    /*
+    ---------------------------------------------
     Explicit Login Control
     ---------------------------------------------
     */
@@ -2627,7 +2951,6 @@ function getInteractionType(element)
             ].join(" ")
         );
 
-
     if (loginKeywordDetected)
     {
         /*
@@ -2644,20 +2967,17 @@ function getInteractionType(element)
                 role === "button"
             );
 
-
         const isLoginInput =
             (
                 type === "password" ||
                 type === "email"
             );
 
-
         const loginControl =
             (
                 isButton ||
                 isLoginInput
             );
-
 
         if (loginControl)
         {
@@ -2677,7 +2997,6 @@ function getInteractionType(element)
                 form.querySelector(
                     "input[type='password']"
                 );
-
 
             const usernameField =
                 form.querySelector(
@@ -2736,27 +3055,114 @@ function getInteractionType(element)
     }
 
 
-    /*
-    =====================================================
+    /* =====================================================
     UPLOAD
-    =====================================================
+    ===================================================== */
+
+    /*
+    ---------------------------------------------
+    Google Forms File Upload
+    ---------------------------------------------
+
+    Google Forms uses a custom button labelled
+    "Add File" instead of a normal
+    <input type="file"> control.
+
+    Only recognise this as Upload when the
+    current page is a Google Forms page.
+    ---------------------------------------------
+    */
+
+    const isGoogleFormsPage =
+        (
+            window.location.hostname ===
+                "docs.google.com" &&
+
+            window.location.pathname
+                .toLowerCase()
+                .startsWith("/forms/")
+        );
+
+
+    const isGoogleFormsAddFile =
+        (
+            isGoogleFormsPage &&
+
+            (
+                ariaLabel === "add file" ||
+                text === "add file"
+            ) &&
+
+            role === "button"
+        );
+
+
+    if (isGoogleFormsAddFile)
+    {
+        console.log(
+            "UIDetect: Google Forms Add File button detected as Upload."
+        );
+
+        return "Upload";
+    }
+
+    /*
+    ---------------------------------------------
+    Explicit Upload Keyword
+    ---------------------------------------------
     */
 
     if (
         source.includes("upload") ||
         source.includes("import") ||
-        source.includes("attachment") 
+        source.includes("attachment")
     )
     {
         return "Upload";
     }
 
 
+    /*
+    ---------------------------------------------
+    Upload Form Context
+    ---------------------------------------------
+    */
+
     if (
         formSource.includes("upload") ||
         formSource.includes("import") ||
         formSource.includes("attachment")
     )
+    {
+        return "Upload";
+    }
+
+
+    /*
+    ---------------------------------------------
+    File Input Association
+    ---------------------------------------------
+
+    Some websites use controls such as:
+
+        "Add File"
+        "Choose File"
+        "Select File"
+
+    without using the word "upload".
+
+    If the clicked element is associated with
+    an input[type="file"], classify it as Upload.
+    ---------------------------------------------
+    */
+
+    const fileInput =
+        element.closest("form")?.querySelector(
+            "input[type='file']"
+        );
+
+
+    if (fileInput)
     {
         return "Upload";
     }
