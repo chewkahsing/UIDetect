@@ -42,6 +42,7 @@ const POPUP_ERROR_CODES =
 };
 
 
+
 /* =====================================================
 Create User-Friendly Error Message
 ===================================================== */
@@ -172,6 +173,7 @@ function initializeUI()
 {
     try
     {
+
         updateWebsite(
             "Loading..."
         );
@@ -1306,7 +1308,8 @@ function updateVirusTotal(
 
 
         let explanation =
-            "VirusTotal assessment unavailable.";
+            "VirusTotal could not provide a result for this website. " +
+            "This does not mean the website is unsafe. It means VirusTotal's assessment was unavailable, so UIDetect could not use VirusTotal data in this scan.";
 
 
         const normalizedStatus =
@@ -1970,6 +1973,10 @@ async function scanButtonClicked()
         "Scanning..."
     );
 
+    updateSecurityScore(
+        "--"
+    );
+
     updateSecurityLevel(
         "Scanning..."
     );
@@ -2165,7 +2172,7 @@ async function scanButtonClicked()
 
                 POPUP_ERROR_CODES.MESSAGE_ERROR,
 
-                "Unable to communicate with the UIDetect background service.",
+                "UIDetect is not running. Please start the UIDetect software and try the scan again.",
 
                 true
 
@@ -2206,10 +2213,19 @@ async function scanButtonClicked()
         )
         {
             console.log(
-                "UIDetect scan cancelled by user."
+                "UIDetect is not running. Please start the UIDetect software and try the scan again."
             );
 
             updateWebsiteStatus(
+                "Scan Cancelled"
+            );
+
+            updateSecurityScore(
+                "--"
+            );
+
+
+            updateSecurityLevel(
                 "Scan Cancelled"
             );
 
@@ -2309,13 +2325,22 @@ async function scanButtonClicked()
             "Scan Failed"
         );
 
+        updateSecurityScore(
+            "--"
+        );
+
+
+        updateSecurityLevel(
+            "Scan Failed"
+        );
+
 
         const message =
             getUserErrorMessage(
 
                 error,
 
-                "Unable to scan this website. Please try again."
+                "UIDetect is not running. Please start the UIDetect software and try the scan again."
 
             );
 
