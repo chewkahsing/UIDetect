@@ -1,3 +1,18 @@
+import sys
+
+try:
+    sys.stdout.reconfigure(
+        encoding="utf-8",
+        errors="replace"
+    )
+
+    sys.stderr.reconfigure(
+        encoding="utf-8",
+        errors="replace"
+    )
+except Exception:
+    pass
+
 import logging
 import os
 
@@ -36,9 +51,47 @@ import os
 # Create logs folder
 # ==========================================================
 
-LOG_FOLDER = "logs"
+# UIDetect may be installed under Program Files, which is
+# normally protected from standard user write access.
+#
+# Runtime-generated logs are therefore stored in the user's
+# Local AppData directory.
 
-os.makedirs(LOG_FOLDER, exist_ok=True)
+RUNTIME_FOLDER = os.path.join(
+    os.environ.get(
+        "LOCALAPPDATA",
+        os.path.expanduser("~")
+    ),
+    "UIDetect"
+)
+
+LOG_FOLDER = os.path.join(
+    RUNTIME_FOLDER,
+    "logs"
+)
+
+os.makedirs(
+    LOG_FOLDER,
+    exist_ok=True
+)
+
+
+# ==========================================================
+# Force UTF-8 for Console / Redirected Output
+# ==========================================================
+
+for stream in (
+    sys.stdout,
+    sys.stderr
+):
+    try:
+        stream.reconfigure(
+            encoding="utf-8",
+            errors="replace"
+        )
+    except Exception:
+        pass
+
 
 # ==========================================================
 # Configure Logger
@@ -48,7 +101,13 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s | %(levelname)s | %(message)s",
     handlers=[
-        logging.FileHandler(f"{LOG_FOLDER}/uidetect.log"),
+        logging.FileHandler(
+            os.path.join(
+                LOG_FOLDER,
+                "uidetect.log"
+            ),
+            encoding="utf-8"
+        ),
         logging.StreamHandler()
     ]
 )

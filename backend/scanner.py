@@ -802,32 +802,20 @@ def scan_website(
         try:
 
             # ==================================================
-            # Primary path: structured-claims generation.
+            # Primary path: consolidated natural-language generation.
             #
-            # qwen2.5:3b is a 3B-parameter local model. Asking it to
-            # freely write prose under a very large, highly
-            # conditional instruction set (see
-            # warning_ai_consolidated.build_warning_prompt) is past
-            # what a model this size can reliably follow -- in
-            # practice it falls back to copying the most concrete
-            # literal text it was shown, which is why popups kept
-            # converging on the same stock sentence.
+            # The backend provides the completed UIDetect assessment
+            # as factual evidence. Qwen generates the three
+            # user-facing fields naturally from those facts while
+            # following the finding priority, interaction-context,
+            # recommendation, and no-invention rules defined by
+            # warning_ai_consolidated.
             #
-            # generate_security_ai_structured() instead asks the
-            # model to do the one thing a 3B model IS reliably good
-            # at: pick an index from a short enumerated list under a
-            # JSON schema. The candidate sentences are all
-            # pre-authored and grounded in this scan's actual
-            # findings (see claims_schema.derive_security_claims), so
-            # the output can't drift into generic boilerplate and
-            # can't hallucinate a finding that wasn't detected.
-            #
-            # generate_security_ai (free-text) is kept as a manual
-            # fallback below only if the structured path itself
-            # fails outright.
+            # The structured-claims generator remains available as a
+            # grounded fallback if the consolidated AI path fails.
             # ==================================================
 
-            ai_result = generate_security_ai_structured({
+            ai_result = generate_security_ai({
 
                 "url":
                     url,
@@ -922,9 +910,9 @@ def scan_website(
             })
 
             # ==================================================
-            # If the structured path itself reports failure (as
-            # opposed to raising), fall back to the original
-            # free-text generator so a popup can still render.
+            # If the consolidated path itself reports failure (as
+            # opposed to raising), fall back to the grounded
+            # structured generator so a popup can still render.
             # ==================================================
 
             if not (
@@ -933,11 +921,11 @@ def scan_website(
             ):
 
                 log_warning(
-                    "Structured Security AI reported failure; "
-                    "falling back to free-text generation."
+                    "Consolidated Security AI reported failure; "
+                    "falling back to structured generation."
                 )
 
-                ai_result = generate_security_ai({
+                ai_result = generate_security_ai_structured({
 
                     "url": url,
                     "interaction": interaction or "BROWSE",
