@@ -597,7 +597,6 @@ The main supported interaction categories include:
 * Registration
 * Upload
 * Download
-* Payment
 
 When a potentially sensitive interaction is detected, UIDetect can interrupt the interaction and display a security assessment before allowing the user to continue.
 
