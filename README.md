@@ -1,4 +1,4 @@
-<img height="450" alt="UIDetect image" src="https://github.com/user-attachments/assets/5c61c8d1-1721-49e0-9121-ace3803982d1" />
+<img height="400" alt="UIDetect image" src="https://github.com/user-attachments/assets/5c61c8d1-1721-49e0-9121-ace3803982d1" />
 
 # UIDetect User Manual
 
