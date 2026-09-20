@@ -1,3 +1,4 @@
+<img width="1774" height="887" alt="UIDetect image" src="https://github.com/user-attachments/assets/5c61c8d1-1721-49e0-9121-ace3803982d1" />
 # UIDetect User Manual
 
 UIDetect is an intelligent Chrome browser extension designed to help users understand the security condition of websites before interacting with them.
