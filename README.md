@@ -914,12 +914,19 @@ Always consider multiple security indicators before deciding whether to trust a 
 # 29. Project Information
 
 **Project:** UIDetect
+
 **Description:** Intelligent Browser Extension for Real-time Website Security Assessment
+
 **Platform:** Google Chrome
+
 **Backend:** Python / Flask
+
 **AI Service:** Ollama
+
 **AI Model:** `qwen2.5:3b`
+
 **Extension Standard:** Chrome Manifest V3
+
 
 ---
 
