@@ -659,19 +659,7 @@ Users should review unfamiliar downloads carefully before opening them.
 
 ---
 
-# 23. Payment Detection
-
-UIDetect can detect payment-related interactions.
-
-Payment-related detection may identify controls or forms containing common payment-related information or actions.
-
-When a payment interaction is detected, UIDetect can provide an additional security warning before the action continues.
-
-Users should carefully verify the website before entering financial information.
-
----
-
-# 24. Right-Click Website Scan
+# 23. Right-Click Website Scan
 
 UIDetect can assess a website link before opening it.
 
@@ -689,7 +677,7 @@ This is useful for unfamiliar links because the user can assess the destination 
 
 ---
 
-# 25. Cancellation
+# 24. Cancellation
 
 UIDetect provides cancellation for scans where the **Cancel Scan** control is available.
 
@@ -703,7 +691,7 @@ Cancellation stops the current UIDetect assessment rather than indicating that t
 
 ---
 
-# 26. Troubleshooting
+# 25. Troubleshooting
 
 ## UIDetect Cannot Scan the Page
 
@@ -824,7 +812,7 @@ If **Cancel Scan** is available:
 
 ---
 
-# 27. Quick Setup
+# 26. Quick Setup
 
 For a quick setup:
 
@@ -870,7 +858,7 @@ For a quick setup:
 
 ---
 
-# 28. GitHub Distribution
+# 27. GitHub Distribution
 
 The recommended distribution structure is:
 
@@ -898,7 +886,7 @@ The source repository contains the UIDetect backend, Chrome extension, launcher,
 
 ---
 
-# 29. Important Security Notice
+# 28. Important Security Notice
 
 UIDetect is designed to assist users in understanding website security.
 
@@ -923,7 +911,7 @@ Always consider multiple security indicators before deciding whether to trust a 
 
 ---
 
-# 30. Project Information
+# 29. Project Information
 
 **Project:** UIDetect
 **Description:** Intelligent Browser Extension for Real-time Website Security Assessment
