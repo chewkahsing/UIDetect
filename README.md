@@ -134,9 +134,9 @@ UIDetect uses Python for its local backend.
 
 Download Python 3.13.14 from the official Python website:
 
-`
-[https://www.python.org/](https://www.python.org/ftp/python/3.13.14/python-3.13.14-amd64.exe) 
-``
+
+>> [https://www.python.org/](https://www.python.org/ftp/python/3.13.14/python-3.13.14-amd64.exe) 
+
 
 During installation:
 
