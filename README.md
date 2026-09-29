@@ -119,7 +119,7 @@ Download the latest UIDetect installer or project package from the project's Git
 The recommended installer is:
 
 ```text
-UIDetect_Setup.exe
+UIDetect_Setup.exe https://github.com/chewkahsing/UIDetect/releases/tag/New
 ```
 
 If the source-code ZIP package is provided, download and extract the complete package before using UIDetect.
