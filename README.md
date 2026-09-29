@@ -54,14 +54,14 @@ UIDetect also provides:
 
 Before running UIDetect, make sure the following are available:
 
-| Requirement      | Version / Information                   |
-| ---------------- | --------------------------------------- |
-| Operating System | Windows 10 or later                     |
-| Browser          | Google Chrome                           |
-| Python           | 3.13.14                                 |
-| Ollama           | Current supported version               |
-| AI Model         | `qwen2.5:3b`                            |
-| Internet         | Required for external security services |
+| Requirement      | Version / Information                                                                         |
+| ---------------- | --------------------------------------------------------------------------------------------- |
+| Operating System | Windows 10 or later                                                                           |
+| Browser          | Google Chrome                                                                                 |
+| Internet         | Required during installation (to download components) and for external security services      |
+| Disk Space       | Several GB free (for Python, Ollama and the AI model)                                         |
+
+Python 3.13.14, Ollama and the `qwen2.5:3b` AI model are **installed automatically** by the UIDetect installer if they are not already on your computer. You do not need to install them yourself.
 
 Visual Studio Code is **not required** to run UIDetect. It is only useful for development and source-code editing.
 
@@ -118,106 +118,44 @@ Download the latest UIDetect installer or project package from the project's Git
 
 The recommended installer is:
 
-
 > https://github.com/chewkahsing/UIDetect/releases/tag/New 
 
+Download `UIDetect_Setup.exe`. You do not need to download Python, Ollama or the AI model separately, because the installer handles them for you (see Section 5).
 
-If the source-code ZIP package is provided, download and extract the complete package before using UIDetect.
+If the source-code ZIP package is provided instead, download and extract the complete package before using UIDetect.
 
 > **Important:** Do not run UIDetect directly from inside a ZIP file.
 
 ---
 
-# 5. Install Python 3.13.14
+# 5. Install UIDetect (Automatic Setup)
 
-UIDetect uses Python for its local backend.
-
-Download Python 3.13.14 from the official Python website:
-
-
-> [https://www.python.org/](https://www.python.org/ftp/python/3.13.14/python-3.13.14-amd64.exe) 
-
-
-During installation:
-
-1. Run the Python installer.
-2. Enable **Add Python to PATH** if the option is available.
-3. Continue with the installation.
-4. Complete the installation.
-
-Verify the installation:
-
-```bash
-python --version
-```
-
-The expected version is:
-
-```text
-Python 3.13.14
-```
-
-The UIDetect installer also checks for Python and can install the required version when necessary.
-
----
-
-# 6. Install Ollama
-
-UIDetect uses Ollama to provide the local AI service.
-
-Download Ollama from:
-
-> https://ollama.com/download/OllamaSetup.exe
-
-After installation, verify it:
-
-```bash
-ollama --version
-```
-
-If Ollama is installed correctly, its version will be displayed.
-
----
-
-# 7. Install the UIDetect AI Model
-
-UIDetect currently uses:
-
-```text
-qwen2.5:3b
-```
-
-Install the model using:
-
-```bash
-ollama pull qwen2.5:3b
-```
-
-Verify the model:
-
-```bash
-ollama list
-```
-
-The following model should appear:
-
-```text
-qwen2.5:3b
-```
-
-The UIDetect launcher also checks whether Ollama and the configured AI model are available.
-
----
-
-# 8. Install UIDetect
-
-The recommended installation method is the UIDetect installer:
+Run the installer:
 
 ```text
 UIDetect_Setup.exe
 ```
 
-The installer performs the required setup and prepares the UIDetect runtime.
+The installer sets up everything UIDetect needs. It checks your computer and automatically downloads and installs any missing component:
+
+| Component             | What the installer does                                         |
+| --------------------- | --------------------------------------------------------------- |
+| Python 3.13.14        | Downloads and installs it if not found, and adds it to PATH     |
+| Python dependencies   | Installs the packages the Flask backend needs                   |
+| Ollama                | Downloads and installs it if not found                          |
+| AI model `qwen2.5:3b` | Downloads it through Ollama if not already installed            |
+
+Components that are already installed are detected and skipped.
+
+Steps:
+
+1. Make sure you have an internet connection.
+2. Run `UIDetect_Setup.exe`.
+3. Choose the installation folder.
+4. Wait for setup to finish. The AI model download is the longest step and can take several minutes.
+5. Do not close the installer while components are downloading.
+
+When setup finishes, UIDetect is installed with `UIDetect.exe` in the selected folder.
 
 The installation process uses:
 
@@ -225,23 +163,15 @@ The installation process uses:
 Install_UIDetect.bat
 ```
 
-to check and install required components such as Python, Ollama, the AI model, and Python dependencies.
+to check and install the required components. The installer runs it automatically.
 
-After installation, UIDetect is installed into the selected installation directory.
+> **Important:** Normal users should use `UIDetect_Setup.exe` and should not run `Install_UIDetect.bat` manually.
 
-The installed application includes:
-
-```text
-UIDetect.exe
-```
-
-which launches the UIDetect interface and backend.
-
-> **Important:** Normal users should use `UIDetect_Setup.exe` instead of manually running the installation batch file.
+> **Note:** If the installation fails or you are offline, see *Automatic Installation Failed* in the Troubleshooting section (Section 22).
 
 ---
 
-# 9. Start UIDetect
+# 6. Start UIDetect
 
 After installation, start:
 
@@ -271,7 +201,7 @@ If the UIDetect backend stops, restart UIDetect.
 
 ---
 
-# 10. UIDetect Launcher
+# 7. UIDetect Launcher
 
 The UIDetect launcher provides several functions.
 
@@ -297,7 +227,7 @@ Provides instructions for the main UIDetect assessment features.
 
 ---
 
-# 11. Load UIDetect into Google Chrome
+# 8. Load UIDetect into Google Chrome
 
 UIDetect is loaded into Chrome as an unpacked extension.
 
@@ -311,7 +241,7 @@ Then:
 
 1. Enable **Developer mode**.
 2. Click **Load unpacked**.
-3. Select the UIDetect project folder.
+3. Select the UIDetect project folder (the installation folder, which you can open from the launcher using **Open Installation Folder**).
 4. Make sure the selected folder contains:
 
 ```text
@@ -326,7 +256,7 @@ manifest.json
 
 ---
 
-# 12. Start Using UIDetect
+# 9. Start Using UIDetect
 
 Before performing a scan, make sure:
 
@@ -344,7 +274,7 @@ UIDetect provides several ways to assess a website.
 
 ---
 
-# 13. Dashboard Scan
+# 10. Dashboard Scan
 
 The Dashboard Scan is the main website security assessment.
 
@@ -373,7 +303,7 @@ If necessary, use **Cancel Scan** to stop the current scan.
 
 ---
 
-# 14. Security Assessment Sources
+# 11. Security Assessment Sources
 
 UIDetect uses several security assessment sources.
 
@@ -482,7 +412,7 @@ A newly registered domain is not automatically malicious.
 
 ---
 
-# 15. Security Score
+# 12. Security Score
 
 UIDetect calculates a security score using multiple security indicators.
 
@@ -518,7 +448,7 @@ Certain confirmed threat-intelligence results can also limit the maximum score t
 
 ---
 
-# 16. Final Security Posture
+# 13. Final Security Posture
 
 The Final Security Posture is separate from the numerical Security Score.
 
@@ -552,7 +482,7 @@ An unavailable security service is treated as a verification limitation rather t
 
 ---
 
-# 17. Confidence
+# 14. Confidence
 
 UIDetect also reports an assessment confidence level.
 
@@ -568,7 +498,7 @@ It means that fewer available checks were able to contribute to the assessment.
 
 ---
 
-# 18. AI Recommendation
+# 15. AI Recommendation
 
 UIDetect uses the local:
 
@@ -588,7 +518,7 @@ AI recommendations are intended as security guidance and should not be treated a
 
 ---
 
-# 19. Context-Aware Security Assessment
+# 16. Context-Aware Security Assessment
 
 UIDetect can detect potentially security-sensitive interactions on websites.
 
@@ -613,7 +543,7 @@ Users can review the warning before deciding whether to continue.
 
 ---
 
-# 20. Login and Registration Detection
+# 17. Login and Registration Detection
 
 UIDetect can identify common login and registration interactions.
 
@@ -629,7 +559,7 @@ When UIDetect detects a relevant interaction, it performs an additional assessme
 
 ---
 
-# 21. Upload Detection
+# 18. Upload Detection
 
 UIDetect can detect file upload interactions.
 
@@ -644,7 +574,7 @@ Users should avoid uploading personal or sensitive documents to unfamiliar websi
 
 ---
 
-# 22. Download Detection
+# 19. Download Detection
 
 UIDetect can detect download-related interactions.
 
@@ -659,7 +589,7 @@ Users should review unfamiliar downloads carefully before opening them.
 
 ---
 
-# 23. Right-Click Website Scan
+# 20. Right-Click Website Scan
 
 UIDetect can assess a website link before opening it.
 
@@ -677,7 +607,7 @@ This is useful for unfamiliar links because the user can assess the destination 
 
 ---
 
-# 24. Cancellation
+# 21. Cancellation
 
 UIDetect provides cancellation for scans where the **Cancel Scan** control is available.
 
@@ -691,7 +621,33 @@ Cancellation stops the current UIDetect assessment rather than indicating that t
 
 ---
 
-# 25. Troubleshooting
+# 22. Troubleshooting
+
+## Automatic Installation Failed
+
+If the installer could not download or install a component (for example, because of no internet connection or a blocked download), you can install the components manually and then run `UIDetect_Setup.exe` again.
+
+### Manual Installation (Optional)
+
+1. **Python 3.13.14:** https://www.python.org/ftp/python/3.13.14/python-3.13.14-amd64.exe (enable **Add Python to PATH**). Verify with:
+
+```bash
+python --version
+```
+
+2. **Ollama:** https://ollama.com/download/OllamaSetup.exe. Verify with:
+
+```bash
+ollama --version
+```
+
+3. **AI model:** run the following, then check it with `ollama list`:
+
+```bash
+ollama pull qwen2.5:3b
+```
+
+---
 
 ## UIDetect Cannot Scan the Page
 
@@ -812,53 +768,40 @@ If **Cancel Scan** is available:
 
 ---
 
-# 26. Quick Setup
+# 23. Quick Setup
 
 For a quick setup:
 
 ```text
-1. Download UIDetect
+1. Download UIDetect_Setup.exe from GitHub Releases
         ↓
-2. Extract the project package if using ZIP
+2. Run UIDetect_Setup.exe
+   (Python, Ollama and qwen2.5:3b are installed automatically)
         ↓
-3. Install Python 3.13.14
+3. Start UIDetect.exe
         ↓
-4. Install Ollama
+4. Check Backend / Ollama / AI Model status
         ↓
-5. Install qwen2.5:3b
+5. Open Google Chrome
         ↓
-6. Run UIDetect_Setup.exe
+6. Open chrome://extensions/
         ↓
-7. Start UIDetect.exe
+7. Enable Developer mode
         ↓
-8. Check Backend / Ollama / AI Model status
+8. Click Load unpacked
         ↓
-9. Open Google Chrome
+9. Select the UIDetect folder
         ↓
-10. Open chrome://extensions/
+10. Open a website
         ↓
-11. Enable Developer mode
+11. Click UIDetect, then Scan Website
         ↓
-12. Click Load unpacked
-        ↓
-13. Select the UIDetect folder
-        ↓
-14. Open a website
-        ↓
-15. Click UIDetect
-        ↓
-16. Click Scan Website
-        ↓
-17. Review the Security Score
-        ↓
-18. Review the Final Security Posture
-        ↓
-19. Read the AI Recommendation
+12. Review the Security Score, Final Security Posture and AI Recommendation
 ```
 
 ---
 
-# 27. GitHub Distribution
+# 24. GitHub Distribution
 
 The recommended distribution structure is:
 
@@ -886,7 +829,7 @@ The source repository contains the UIDetect backend, Chrome extension, launcher,
 
 ---
 
-# 28. Important Security Notice
+# 25. Important Security Notice
 
 UIDetect is designed to assist users in understanding website security.
 
@@ -911,7 +854,7 @@ Always consider multiple security indicators before deciding whether to trust a 
 
 ---
 
-# 29. Project Information
+# 26. Project Information
 
 **Project:** UIDetect
 
