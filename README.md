@@ -118,7 +118,7 @@ Download the latest UIDetect installer or project package from the project's Git
 
 The recommended installer is:
 
-> https://github.com/chewkahsing/UIDetect/releases/tag/New 
+> https://github.com/chewkahsing/UIDetect/releases/tag/Installer  
 
 Download `UIDetect_Setup.exe`. You do not need to download Python, Ollama or the AI model separately, because the installer handles them for you (see Section 5).
 
