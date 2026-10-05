@@ -203,7 +203,7 @@ If the UIDetect backend stops or failed, restart UIDetect.
 
 # 7. UIDetect Launcher
 
-<img height="500" alt="Screenshot 2026-09-26 152457" src="https://github.com/user-attachments/assets/977a2f5a-befa-4f98-91a1-011cb32a920f" />
+<img height="400" alt="Screenshot 2026-09-26 152457" src="https://github.com/user-attachments/assets/977a2f5a-befa-4f98-91a1-011cb32a920f" />
 
 
 The UIDetect launcher provides several functions.
