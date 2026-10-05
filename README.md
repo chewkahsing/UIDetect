@@ -197,7 +197,7 @@ When the backend is ready, UIDetect can be used with the Chrome extension.
 
 > **Important:** Keep UIDetect running while performing security scans.
 
-If the UIDetect backend stops, restart UIDetect.
+If the UIDetect backend stops or failed, restart UIDetect.
 
 ---
 
